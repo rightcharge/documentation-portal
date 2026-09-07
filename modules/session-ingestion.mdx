@@ -1,0 +1,45 @@
+---
+title: "Session Ingestion Module"
+sidebarTitle: "Session Ingestion"
+description: "Ingest charging session data from CPMS, charger manufacturer APIs, or direct partner submission for processing by the Rightcharge tariff and reimbursement engines."
+---
+
+The Session Ingestion module is the entry point for all charging session data. Sessions can arrive via Rightcharge's charger integrations, a partner's CPMS, or direct API submission from your platform.
+
+<Tabs>
+  <Tab title="Rightcharge-managed charger integration">
+    When you use the [Charger Integration module](/modules/charger-integration), session data flows automatically into the Session Ingestion module. No additional setup is required beyond linking the charger.
+  </Tab>
+  <Tab title="Partner CPMS push">
+    Your CPMS pushes session data to Rightcharge via webhook. Configure your CPMS to send session events to the Rightcharge ingestion endpoint as they occur.
+  </Tab>
+  <Tab title="Direct API submission">
+    Your platform POSTs session records directly to the Rightcharge API. This route is useful when you already hold session data or when manual submission is required as a fallback.
+  </Tab>
+</Tabs>
+
+## Session data schema
+
+Each session record contains the fields required for validation and downstream processing:
+
+[PLACEHOLDER: session fields — see OpenAPI spec once added]
+
+Typical fields include session ID, driver ID, charger ID, start time, end time, kWh delivered and data source.
+
+## Validation
+
+Rightcharge validates every ingested session before passing it to the Tariff Engine:
+
+- **Duplicate detection**: sessions with the same external ID are rejected or deduplicated.
+- **Plausible kWh ranges**: kWh values outside expected bounds are flagged for review.
+- **Driver attribution**: the session must link to a known, onboarded driver.
+
+[PLACEHOLDER: full validation rules]
+
+## Idempotency
+
+Submit sessions with a stable external ID to prevent duplicate processing. Rightcharge uses this ID to recognise retries and deduplicate submissions.
+
+## Downstream processing
+
+Validated sessions are passed to the [Tariff Engine](/modules/tariff-engine) for cost calculation. The Tariff Engine cannot run until session data has been ingested and validated.

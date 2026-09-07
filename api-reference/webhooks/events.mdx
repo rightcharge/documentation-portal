@@ -1,0 +1,35 @@
+---
+title: "Rightcharge Webhook Event Catalogue"
+sidebarTitle: "Events"
+description: "Complete catalogue of Rightcharge webhook events, including driver lifecycle, session lifecycle and reimbursement events."
+---
+
+The following events are emitted by Rightcharge. Subscribe to the events relevant to your integration to receive real-time updates as resources change state.
+
+<Note>
+  Event names are provisional. The canonical event catalogue will be published when the production API specification is finalised. [PLACEHOLDER: engineering to confirm all event names and payloads.]
+</Note>
+
+## Event catalogue
+
+| Event name | When fired | Key payload fields |
+| --- | --- | --- |
+| [PLACEHOLDER: driver onboarding started event] | Driver begins onboarding journey | `driver.id`, `status` |
+| [PLACEHOLDER: driver onboarded event] | Driver completes onboarding | `driver.id`, `status: onboarding_complete` |
+| [PLACEHOLDER: session received event] | Session successfully ingested | `session.id`, `driver.id`, `energy_kwh` |
+| [PLACEHOLDER: session costed event] | Cost calculation complete | `session.id`, `cost_gbp` |
+| [PLACEHOLDER: session rejected event] | Session failed eligibility or policy | `session.id`, `rejection_reason` |
+| [PLACEHOLDER: reimbursement created event] | Reimbursement record created | `reimbursement.id`, `amount_gbp` |
+| [PLACEHOLDER: reimbursement approved event] | Reimbursement approved | `reimbursement.id`, `status` |
+
+## Subscribing to events
+
+When you register a webhook endpoint, you can choose which events to receive. If you do not specify a filter, all events are sent to your endpoint.
+
+[PLACEHOLDER: confirm subscription model — engineering to confirm whether events are filtered per endpoint or all events are broadcast]
+
+## What to read next
+
+- [Webhook overview](/api-reference/webhooks/overview) — how to register endpoints and read payloads
+- [Webhook verification](/api-reference/webhooks/verification) — how to verify event authenticity
+- [Webhook retries](/api-reference/webhooks/retries) — how failed deliveries are retried

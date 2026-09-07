@@ -1,0 +1,50 @@
+---
+title: "Reimbursement Module"
+sidebarTitle: "Reimbursement"
+description: "Generate and manage reimbursements or supplier payments for verified home charging sessions based on tariff calculations and policy outcomes."
+---
+
+The Reimbursement module creates a reimbursement record for each eligible session batch. It calculates the amount, applies any caps, and triggers a payment or export for your payroll or finance team.
+
+<Tabs>
+  <Tab title="Driver reimbursement">
+    Pay the driver directly for their home charging costs. Rightcharge calculates the exact amount based on the Tariff Engine output and any policy caps. Your platform executes the payment using the reimbursement record.
+  </Tab>
+  <Tab title="Supplier payment">
+    Pay the energy supplier directly rather than reimbursing the driver. This mode is available on a limited basis and requires additional configuration.
+  </Tab>
+  <Tab title="Expense export">
+    Export reimbursement data to your payroll or expense system. Rightcharge provides the calculated amounts and metadata; your finance platform handles disbursement.
+  </Tab>
+</Tabs>
+
+## Reimbursement lifecycle
+
+A reimbursement record moves through the following states:
+
+| State | Description |
+| --- | --- |
+| `created` | Reimbursement record generated from eligible sessions. |
+| `approved` | Reimbursement passed policy and eligibility checks. |
+
+[PLACEHOLDER: full state machine]
+
+## Payment disbursement
+
+Rightcharge does not currently operate as a payment processor. Payment execution is your responsibility. Rightcharge provides the calculated amount and a reimbursement record via webhook and API.
+
+[PLACEHOLDER: confirm if any payment integrations are planned]
+
+<Warning>
+  Rightcharge calculates reimbursement amounts; it does not currently execute payments directly. Ensure your payment disbursement flow is in place before going live.
+</Warning>
+
+## Exports
+
+Reimbursement data is available via API and can be consumed by payroll or expense platforms.
+
+[PLACEHOLDER: confirm supported export formats]
+
+## Module dependencies
+
+The Reimbursement module depends on the [Tariff Engine](/modules/tariff-engine) and [Eligibility & Policy](/modules/eligibility-policy). It cannot run until sessions have been costed and passed policy checks.

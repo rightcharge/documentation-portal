@@ -1,0 +1,49 @@
+---
+title: "Rightcharge Status Values Glossary"
+sidebarTitle: "Status Glossary"
+description: "A comprehensive glossary of status values for Rightcharge resources including drivers, sessions and reimbursements."
+---
+
+Rightcharge uses consistent status strings across resources. This glossary lists all current status values and their meanings.
+
+<Note>
+  Status values are provisional. Confirm the full state machine for each resource with engineering before implementing state-dependent logic in production.
+</Note>
+
+<Tabs>
+  <Tab title="Drivers">
+    | Status value | Meaning | Next possible states |
+    | --- | --- | --- |
+    | `pending_onboarding` | The driver has been created but not yet started onboarding. | `onboarding_in_progress` |
+    | `onboarding_in_progress` | The driver is actively completing onboarding steps. | `onboarding_complete`, `suspended` |
+    | `onboarding_complete` | The driver has finished onboarding and is eligible for charging and reimbursement. | `suspended` |
+    | `suspended` | The driver has been suspended and is not currently eligible. | `onboarding_complete` |
+
+    <Info>
+      [PLACEHOLDER: full state machine and transition triggers — engineering to provide]
+    </Info>
+  </Tab>
+  <Tab title="Sessions">
+    | Status value | Meaning | Next possible states |
+    | --- | --- | --- |
+    | `pending` | The session has been ingested but not yet processed. | `processing`, `rejected` |
+    | `processing` | The session is being validated and costed. | `costed`, `rejected` |
+    | `costed` | The session has been successfully costed and is ready for reimbursement. | `rejected` |
+    | `rejected` | The session failed validation or costing and will not be reimbursed. | — |
+
+    <Info>
+      [PLACEHOLDER: full state machine — engineering to provide]
+    </Info>
+  </Tab>
+  <Tab title="Reimbursements">
+    | Status value | Meaning | Next possible states |
+    | --- | --- | --- |
+    | `created` | The reimbursement has been generated from a costed session. | `approved` |
+    | `approved` | The reimbursement has been approved for payment. | `paid` |
+    | `paid` | The reimbursement has been paid to the driver or supplier. | — |
+
+    <Info>
+      [PLACEHOLDER: full state machine — engineering to provide]
+    </Info>
+  </Tab>
+</Tabs>

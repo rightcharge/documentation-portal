@@ -1,0 +1,89 @@
+---
+title: "Verify Rightcharge Webhook Signatures"
+sidebarTitle: "Webhook Verification"
+description: "Authenticate incoming Rightcharge webhook payloads using HMAC-SHA256 signature verification to ensure events originate from Rightcharge."
+---
+
+Rightcharge signs every webhook payload with HMAC-SHA256. Verify the signature before processing the payload to ensure the event originated from Rightcharge and was not tampered with in transit.
+
+## How signature verification works
+
+Rightcharge sends a signature in the `[PLACEHOLDER: signature header name]` header of every webhook request. To verify:
+
+1. Read the raw request body as bytes (before JSON parsing)
+2. Compute the HMAC-SHA256 of the raw body using your webhook secret
+3. Compare the computed signature to the header value
+4. If they match, process the payload. If not, reject it
+
+<Warning>
+  Always verify the signature on raw bytes before JSON parsing. Parsing first may alter whitespace, line endings or encoding and break verification.
+</Warning>
+
+## Code examples
+
+<CodeGroup>
+
+```javascript Node.js
+const crypto = require('crypto');
+
+const secret = process.env.RIGHTCHARGE_WEBHOOK_SECRET;
+const signatureHeader = req.headers['[PLACEHOLDER: signature header name]'];
+const rawBody = req.body; // raw bytes, not parsed JSON
+
+const computed = crypto
+  .createHmac('sha256', secret)
+  .update(rawBody)
+  .digest('hex');
+
+if (computed !== signatureHeader) {
+  return res.status(401).send('Invalid signature');
+}
+
+// Process the webhook payload
+const payload = JSON.parse(rawBody);
+```
+
+```python Python
+import hmac
+import hashlib
+
+secret = os.environ['RIGHTCHARGE_WEBHOOK_SECRET']
+signature_header = request.headers.get('[PLACEHOLDER: signature header name]')
+raw_body = request.get_data()  # raw bytes
+
+computed = hmac.new(
+    secret.encode(),
+    raw_body,
+    hashlib.sha256
+).hexdigest()
+
+if not hmac.compare_digest(computed, signature_header):
+    return 'Invalid signature', 401
+
+# Process the webhook payload
+payload = json.loads(raw_body)
+```
+
+</CodeGroup>
+
+## Webhook secret rotation
+
+[PLACEHOLDER: document how to rotate webhook secrets. Confirm if rotation is available via the partner dashboard, via API, or requires contacting Rightcharge support. Include steps for generating a new secret, updating your code, and invalidating the old secret.]
+
+## Replaying events
+
+[PLACEHOLDER: confirm if Rightcharge supports manual event replay from the partner dashboard. If supported, document how to replay a specific event or a date range of events for testing or recovery.]
+
+## Troubleshooting
+
+| Symptom | Likely cause | Resolution |
+| --- | --- | --- |
+| Signature mismatch on every request | Raw body includes encoding or whitespace changes | Ensure you read the body as raw bytes before any parsing or transformation |
+| Signature mismatch after framework upgrade | Framework now parses JSON automatically | Configure your framework to expose raw body bytes (e.g., `req.rawBody` in Express) |
+| Missing signature header | Webhook not configured for signature verification | Check webhook settings in the Rightcharge dashboard |
+
+## Next steps
+
+- [api-reference/webhooks/overview](/api-reference/webhooks/overview) for webhook configuration and event subscriptions
+- [api-reference/webhooks/verification](/api-reference/webhooks/verification) for detailed verification reference
+- [api-reference/webhooks/retries](/api-reference/webhooks/retries) for retry behaviour and handling

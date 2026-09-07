@@ -1,0 +1,54 @@
+---
+title: "Eligibility, Policy and Fraud Controls"
+sidebarTitle: "Eligibility & Policy"
+description: "Configure eligibility rules, reimbursement policies and fraud controls to ensure only qualifying sessions are reimbursed under your programme rules."
+---
+
+The Eligibility & Policy module applies programme rules before a reimbursement is created. This ensures only eligible sessions from verified drivers are paid, and that your programme operates within defined cost and frequency limits.
+
+## What you can configure
+
+### Driver eligibility
+
+Define which drivers qualify for reimbursement based on attributes such as role, vehicle type and employment status.
+
+[PLACEHOLDER: full eligibility criteria options]
+
+### Session policy
+
+Set rules that individual sessions must pass before they are approved for reimbursement:
+
+- Minimum and maximum kWh per session
+- Session frequency caps (for example, maximum sessions per day or month)
+- Home location verification (session must occur at the driver's registered address)
+
+### Fraud controls
+
+Apply automated checks to detect anomalous or duplicate activity:
+
+- Duplicate session detection
+- Anomaly thresholds (for example, unusually high kWh for the vehicle type)
+
+[PLACEHOLDER: configurable fraud rules]
+
+### Cost caps
+
+Limit reimbursement exposure with per-session and per-period caps in GBP.
+
+[PLACEHOLDER: confirm currency support]
+
+## Configuration
+
+Policy rules are configured per company or per fleet programme.
+
+[PLACEHOLDER: policy configuration API / UI — engineering to confirm]
+
+## Rejected sessions
+
+Sessions that fail eligibility or policy checks are returned with a rejection reason. A webhook fires for each rejection so your platform can notify the driver or update internal records.
+
+[PLACEHOLDER: webhook event name]
+
+<Warning>
+  Misconfigured policy rules may result in sessions being incorrectly rejected or approved. Test thoroughly in sandbox before going live.
+</Warning>

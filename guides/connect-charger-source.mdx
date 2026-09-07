@@ -1,0 +1,99 @@
+---
+title: "Connect a Charger Data Source to Rightcharge"
+sidebarTitle: "Connect Charger Source"
+description: "Configure a CPMS, charger manufacturer API, or manual session source so Rightcharge can ingest session data for cost calculation."
+---
+
+Rightcharge needs charging session data to calculate costs and generate reimbursements. You can connect a charger data source through a managed integration, a CPMS push, or manual API submission. Choose the route that matches your infrastructure and partner agreements.
+
+<Tabs>
+  <Tab title="Rightcharge-managed integration">
+    Rightcharge maintains integrations with selected charger networks and CPMS platforms. When configured, session data arrives automatically without additional development work on your side.
+
+    <Steps>
+      <Step title="Contact Rightcharge to configure the integration">
+        Provide your charger network or CPMS details to the Rightcharge partner team. They will enable the integration for your account.
+      </Step>
+      <Step title="Map chargers to drivers">
+        During driver onboarding, the driver registers their home charger. Rightcharge links the charger serial number or CPMS identifier to the driver record.
+      </Step>
+      <Step title="Receive sessions automatically">
+        When the driver charges at home, the charger network or CPMS pushes session data to Rightcharge. You receive a webhook event [PLACEHOLDER: session received webhook event name] for each new session.
+      </Step>
+    </Steps>
+
+    <Info>
+      Supported networks and configuration steps: [PLACEHOLDER: list supported charger networks and provide configuration instructions per network.]
+    </Info>
+  </Tab>
+  <Tab title="CPMS push">
+    If you operate your own CPMS or have a direct relationship with a charger management platform, configure it to push session data to Rightcharge.
+
+    <Steps>
+      <Step title="Obtain the inbound session endpoint">
+        Rightcharge will provide a dedicated inbound endpoint URL and authentication credentials for your CPMS. [PLACEHOLDER: confirm inbound session endpoint format and authentication method.]
+      </Step>
+      <Step title="Configure your CPMS">
+        Set up a push rule in your CPMS to POST session data to the Rightcharge endpoint. Include the following fields in each payload: [PLACEHOLDER: confirm expected payload format and required fields for CPMS push.]
+      </Step>
+      <Step title="Authenticate requests">
+        Include the provided API key or bearer token in the Authorization header of every request.
+      </Step>
+      <Step title="Verify delivery">
+        Rightcharge returns a success response for accepted sessions. Handle 4xx errors by checking the response body for validation messages.
+      </Step>
+    </Steps>
+
+    <Warning>
+      Always include a stable `external_session_id` in CPMS payloads. Rightcharge uses this field for duplicate detection. Re-submitting the same ID returns the original session without creating a duplicate.
+    </Warning>
+  </Tab>
+  <Tab title="Manual API submission">
+    If you do not have an automatic integration, submit sessions directly via the Rightcharge API.
+
+    <CodeGroup>
+
+    ```bash
+    curl -X POST [PLACEHOLDER: https://api.rightcharge.co.uk/v1/sessions] \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "driver_id": "drv_def456",
+        "charger_id": "chr_ghi789",
+        "start_time": "2024-01-15T18:00:00Z",
+        "end_time": "2024-01-15T22:30:00Z",
+        "energy_kwh": 24.5,
+        "external_session_id": "session-2024-01-15-001"
+      }'
+    ```
+
+    </CodeGroup>
+
+    Expected response:
+
+    ```json
+    {
+      "id": "sess_jkl012",
+      "driver_id": "drv_def456",
+      "charger_id": "chr_ghi789",
+      "status": "received",
+      "external_session_id": "session-2024-01-15-001",
+      "created_at": "2024-01-15T22:31:00Z"
+    }
+    ```
+
+    See [guides/submit-sessions](/guides/submit-sessions) for full details on manual session submission, including idempotency, validation errors and bulk submission.
+  </Tab>
+</Tabs>
+
+## Duplicate detection
+
+<Warning>
+  Duplicate sessions are detected by `external_session_id`. Always pass a stable identifier that does not change between submissions. If you resubmit a session with the same `external_session_id`, Rightcharge returns the original record without creating a duplicate.
+</Warning>
+
+## Next steps
+
+- [modules/charger-integration](/modules/charger-integration) for detailed module documentation
+- [modules/session-ingestion](/modules/session-ingestion) for session processing and validation rules
+- [guides/submit-sessions](/guides/submit-sessions) for the complete manual submission guide

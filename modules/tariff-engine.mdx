@@ -1,0 +1,44 @@
+---
+title: "Tariff Engine Module"
+sidebarTitle: "Tariff Engine"
+description: "Calculate the exact electricity cost of each charging session using the driver's real tariff data, including time-of-use rates and standing charges."
+---
+
+The Tariff Engine calculates the cost of each charging session from the driver's actual electricity tariff. This replaces flat-rate estimation with accurate, per-session costing that reflects the real price of electricity at the time of charging.
+
+## Inputs
+
+The Tariff Engine requires the following inputs for each session:
+
+| Input | Source |
+| --- | --- |
+| Session kWh and timestamps | [Session Ingestion module](/modules/session-ingestion) |
+| Driver's electricity tariff | Driver Onboarding module or supplier API |
+| Unit rate, standing charge, time-of-use schedule | Driver self-reported or supplier integration |
+
+## Outputs
+
+For each processed session, the Tariff Engine produces:
+
+- **Cost per session**: the total electricity cost in GBP [PLACEHOLDER: supported currencies]
+- **Tariff breakdown**: a breakdown of unit rate, standing charge and time-of-use slots applied
+
+## Tariff data sources
+
+Tariff data can reach the engine through three routes:
+
+1. **Driver self-reported**: the driver selects or confirms their tariff during onboarding.
+2. **Supplier API integration**: Rightcharge fetches live tariff data directly from the energy supplier. [PLACEHOLDER: supported supplier integrations for tariff data]
+3. **Manual override**: a partner admin updates the tariff via API or dashboard.
+
+## Time-of-use rate support
+
+If the driver is on a time-of-use tariff, the engine applies the correct rate per time slot across the session. A session that spans multiple rate periods receives a blended cost that reflects each period's unit rate.
+
+## Module dependency
+
+The Tariff Engine depends on the [Session Ingestion module](/modules/session-ingestion). It cannot calculate costs until validated session data is available.
+
+<Note>
+  Tariff data accuracy depends on the driver providing correct tariff information during onboarding or a live supplier integration being configured. Incorrect tariff data leads to incorrect cost calculations.
+</Note>

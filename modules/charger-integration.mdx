@@ -1,0 +1,42 @@
+---
+title: "Charger Integration Module"
+sidebarTitle: "Charger Integration"
+description: "Connect home chargers from CPMS providers and manufacturers to receive verified session data and charger state for accurate reimbursement."
+---
+
+The Charger Integration module connects to charging networks and devices to retrieve session data and charger state. This is the primary source of kWh data for tariff calculation and reimbursement.
+
+<Tabs>
+  <Tab title="CPMS API integration">
+    Connect via your partner-side Charge Point Management System (CPMS). Rightcharge pulls session data from the CPMS on your behalf. This route is typical for fleet platforms and energy suppliers that already work with a CPMS provider.
+  </Tab>
+  <Tab title="Direct manufacturer API">
+    Connect directly to a charger manufacturer's API. This route is typical for charger manufacturers and white-label platforms that want native integration without a third-party CPMS.
+  </Tab>
+  <Tab title="Manual session submission">
+    Use this as a fallback when no automated integration is available. Sessions are submitted via the Session Ingestion module by the partner or the driver. This route is less accurate and requires additional validation.
+  </Tab>
+</Tabs>
+
+## What Rightcharge retrieves
+
+For each connected charger, Rightcharge retrieves:
+
+- Session start and end times
+- kWh delivered during the session
+- Charger ID and location
+- RFID or driver attribution, where available
+
+This data is passed to the Session Ingestion module for validation and then to the Tariff Engine for cost calculation.
+
+## Supported networks
+
+[PLACEHOLDER: list of supported CPMS and charger manufacturers — engineering/product to provide]
+
+## Requesting a new charger integration
+
+[PLACEHOLDER: process for requesting support for a new charger network or manufacturer]
+
+<Note>
+  If your CPMS already holds session data, you can use the [Session Ingestion module](/modules/session-ingestion) to submit sessions directly instead of using the Charger Integration module.
+</Note>

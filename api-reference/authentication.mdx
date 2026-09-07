@@ -1,0 +1,67 @@
+---
+title: "API Authentication Reference"
+sidebarTitle: "Authentication"
+description: "Reference for authenticating Rightcharge API requests using API keys, including header format, key types and error responses for invalid credentials."
+---
+
+All Rightcharge API requests must include a valid API key in the `Authorization` header. This page describes the header format, key types, how to obtain keys, and what happens when authentication fails.
+
+## Header format
+
+Pass your API key as a Bearer token:
+
+```text
+Authorization: Bearer YOUR_API_KEY
+```
+
+## Key types
+
+| Environment | Key prefix | Description |
+| --- | --- | --- |
+| Sandbox | [PLACEHOLDER: sandbox key prefix — engineering to confirm] | For development and testing |
+| Production | [PLACEHOLDER: production key prefix — engineering to confirm] | For live traffic |
+
+Keys are scoped to an environment. A sandbox key cannot access production resources, and vice versa.
+
+## How to obtain an API key
+
+Generate API keys from the partner dashboard:
+
+[PLACEHOLDER: partner dashboard URL — product to provide]
+
+<Warning>
+  Never include API keys in client-side code, public repositories, or version control. Store keys in a secrets manager and rotate them regularly.
+</Warning>
+
+## Error responses
+
+### 401 Unauthorized
+
+Returned when the request is missing an API key, or the key is invalid or revoked.
+
+```json
+{
+  "error": {
+    "code": "unauthorized",
+    "message": "The API key provided is invalid or has been revoked."
+  }
+}
+```
+
+### 403 Forbidden
+
+Returned when the API key is valid but does not have sufficient scope for the requested operation.
+
+```json
+{
+  "error": {
+    "code": "forbidden",
+    "message": "The API key does not have permission to perform this action."
+  }
+}
+```
+
+## What to read next
+
+- [Authentication guide](/start-here/authentication) — step-by-step instructions for getting your first key
+- [Errors reference](/api-reference/errors) — full list of error codes and how to handle them

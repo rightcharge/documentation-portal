@@ -1,0 +1,64 @@
+---
+title: "API Error Codes and Handling"
+sidebarTitle: "Errors"
+description: "Reference for Rightcharge API error responses, including HTTP status codes, error code strings, common causes and recommended handling."
+---
+
+Rightcharge returns structured error responses for all failure cases. Always check the `error.code` field, not just the HTTP status code, when implementing error handling.
+
+## Error response structure
+
+Every error response follows this JSON shape:
+
+```json
+{
+  "error": {
+    "code": "[PLACEHOLDER: error code string]",
+    "message": "Human-readable description",
+    "details": {}
+  }
+}
+```
+
+- `code`: A stable string you should use for programmatic handling.
+- `message`: A human-readable description. Do not parse this field.
+- `details`: Additional context, such as field-level validation errors.
+
+## HTTP status codes
+
+| Status | Meaning | Common causes |
+| --- | --- | --- |
+| 400 Bad Request | Invalid request body or parameters | Missing required field, invalid format |
+| 401 Unauthorized | Authentication failed | Missing or invalid API key |
+| 403 Forbidden | Authorisation failed | API key lacks required scope |
+| 404 Not Found | Resource not found | Invalid resource ID |
+| 409 Conflict | Resource already exists | Duplicate `external_id` or idempotency key collision |
+| 422 Unprocessable Entity | Validation failed | Business logic rejection (for example, session kWh out of range) |
+| 429 Too Many Requests | Rate limit exceeded | See [Rate limits](/api-reference/rate-limits) |
+| 500 Internal Server Error | Rightcharge server error | Retry with exponential backoff |
+
+## Error codes
+
+<Warning>
+  Exact error code strings are not yet finalised. The table below lists generic examples only. Confirm the final codes with engineering before implementing error handling in production.
+</Warning>
+
+| Error code | When it occurs | Recommended action |
+| --- | --- | --- |
+| `[PLACEHOLDER: invalid_request]` | The request body or parameters are malformed. | Fix the request and retry. |
+| `[PLACEHOLDER: authentication_failed]` | The API key is missing or invalid. | Check your API key and retry. |
+| `[PLACEHOLDER: insufficient_scope]` | The API key does not have permission for this operation. | Request the required scope from Rightcharge. |
+| `[PLACEHOLDER: resource_not_found]` | The requested resource ID does not exist. | Verify the resource ID. |
+| `[PLACEHOLDER: duplicate_resource]` | A resource with the same identifier already exists. | Use a unique identifier or update the existing resource. |
+| `[PLACEHOLDER: validation_failed]` | Business logic validation failed. | Review the error details and correct the request. |
+| `[PLACEHOLDER: rate_limit_exceeded]` | You have exceeded the rate limit. | Wait and retry with exponential backoff. |
+| `[PLACEHOLDER: internal_error]` | An unexpected server error occurred. | Retry with exponential backoff. Contact support if the error persists. |
+
+## Retry guidance
+
+- **Retryable with exponential backoff**: `429` and `500`. Use a backoff strategy starting at 1 second, doubling each attempt, with a maximum of 5 retries.
+- **Not retryable without fixing the request**: `400`, `401`, `403`, `404`, `409`, `422`. These indicate a client-side issue that must be resolved before retrying.
+
+<Warning>
+  Do not parse the `message` field programmatically. Use `error.code` only. Messages may change without notice.
+</Warning>

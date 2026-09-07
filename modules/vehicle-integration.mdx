@@ -1,0 +1,38 @@
+---
+title: "Vehicle Integration Module"
+sidebarTitle: "Vehicle Integration"
+description: "Connect vehicle telematics and OEM data to attribute charging sessions, verify home charging, and support smart charging schedules."
+---
+
+The Vehicle Integration module connects to telematics providers and OEM APIs to verify vehicle location during charging, attribute sessions to the correct driver, and support smart charging attribution.
+
+## Use cases
+
+- **Confirm home charging**: verify the vehicle was at the driver's registered home address during the session.
+- **Session attribution**: link a charging session to the correct driver and vehicle when charger-level attribution is incomplete.
+- **Smart charging support**: planned feature for V2G and bi-directional charging schedules.
+
+## Integration routes
+
+Rightcharge supports two integration routes for vehicle data:
+
+- **Telematics API**: connect via a third-party telematics provider that aggregates vehicle data.
+- **OEM connected vehicle API**: connect directly to the vehicle manufacturer's API.
+
+[PLACEHOLDER: supported telematics providers and OEM APIs]
+
+## Data retrieved
+
+For each connected vehicle, Rightcharge retrieves:
+
+- Location at session start and end
+- State of charge (where available)
+- VIN for identity verification
+
+## Optional module
+
+Vehicle integration improves accuracy but is not required for all reimbursement flows. If you only need charger-based session data, you can rely on the [Charger Integration module](/modules/charger-integration) alone.
+
+<Info>
+  V2G and bi-directional charging support is a future concept. It is not available in the current platform.
+</Info>

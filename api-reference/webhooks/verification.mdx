@@ -1,0 +1,68 @@
+---
+title: "Webhook Signature Verification Reference"
+sidebarTitle: "Verification"
+description: "Reference for verifying Rightcharge webhook signatures using HMAC-SHA256 to ensure events originate from Rightcharge."
+---
+
+Each webhook includes an HMAC-SHA256 signature header so you can verify that the event originated from Rightcharge and was not tampered with in transit. This page describes the signature format and provides reference implementations in Node.js and Python.
+
+## Signature header
+
+The signature is sent in the following header:
+
+```text
+[PLACEHOLDER: header name, e.g. X-Rightcharge-Signature — engineering to confirm]
+```
+
+## Algorithm
+
+The signature is computed as the HMAC-SHA256 of the raw request body, keyed with your webhook secret.
+
+<Warning>
+  Verify the signature on the raw request bytes before parsing the body as JSON. Parsing first can alter whitespace and invalidate the signature.
+</Warning>
+
+## Reference implementations
+
+<CodeGroup>
+
+```javascript Node.js
+const crypto = require('crypto');
+
+function verifyWebhookSignature(payload, signature, secret) {
+  const expected = crypto
+    .createHmac('sha256', secret)
+    .update(payload, 'utf8')
+    .digest('hex');
+  return crypto.timingSafeEqual(
+    Buffer.from(signature, 'hex'),
+    Buffer.from(expected, 'hex')
+  );
+}
+```
+
+```python Python
+import hmac
+import hashlib
+
+def verify_webhook_signature(payload: bytes, signature: str, secret: str) -> bool:
+    expected = hmac.new(
+        secret.encode('utf-8'),
+        payload,
+        hashlib.sha256
+    ).hexdigest()
+    return hmac.compare_digest(signature, expected)
+```
+
+</CodeGroup>
+
+## How to obtain your webhook secret
+
+Your webhook secret is available in the partner dashboard:
+
+[PLACEHOLDER: partner dashboard URL for webhook settings — product to provide]
+
+## What to read next
+
+- [Webhook verification guide](/guides/webhook-verification) — step-by-step walkthrough with error handling
+- [Webhook events](/api-reference/webhooks/events) — events you will receive and verify

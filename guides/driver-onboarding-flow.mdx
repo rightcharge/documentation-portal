@@ -1,0 +1,167 @@
+---
+title: "Implement the Driver Onboarding Flow"
+sidebarTitle: "Driver Onboarding"
+description: "Integrate the Rightcharge driver onboarding journey into your platform using the hosted URL approach or the step-by-step API."
+---
+
+This guide shows you how to integrate the Rightcharge driver onboarding journey into your platform. You can use the hosted onboarding URL for a fully managed experience, or drive each step via API if you need deeper control over the user interface.
+
+## Prerequisites
+
+Before you begin, ensure you have:
+
+- A Rightcharge API key for the sandbox environment
+- A Company created in Rightcharge (see [guides/home-charging-reimbursement](/guides/home-charging-reimbursement))
+- A webhook endpoint configured to receive driver events
+
+## Hosted journey
+
+<Steps>
+  <Step title="Create the driver via API">
+    POST to the drivers endpoint with the company ID and driver details.
+
+    <CodeGroup>
+
+    ```bash
+    curl -X POST [PLACEHOLDER: https://api.rightcharge.co.uk/v1/drivers] \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "company_id": "comp_abc123",
+        "first_name": "Jane",
+        "last_name": "Smith",
+        "email": "jane.smith@example.com"
+      }'
+    ```
+
+    </CodeGroup>
+
+    Expected response:
+
+    ```json
+    {
+      "id": "drv_def456",
+      "company_id": "comp_abc123",
+      "first_name": "Jane",
+      "last_name": "Smith",
+      "email": "jane.smith@example.com",
+      "status": "pending_onboarding",
+      "onboarding_url": "[PLACEHOLDER: https://onboarding.rightcharge.co.uk/drv_def456]",
+      "created_at": "2024-01-15T09:35:00Z"
+    }
+    ```
+  </Step>
+  <Step title="Receive the onboarding URL">
+    The response includes `onboarding_url`. This is a fully hosted, Rightcharge-managed page that guides the driver through charger registration, vehicle registration and tariff confirmation.
+  </Step>
+  <Step title="Present the onboarding URL to the driver">
+    Deliver the URL to the driver in one of two ways:
+
+    - **Redirect**: send the driver to `onboarding_url` in a new browser tab
+    - **Embed**: load `onboarding_url` in an iframe within your platform
+
+    <Warning>
+      If you use an iframe, confirm with Rightcharge that the onboarding domain allows iframe embedding for your origin. Some browsers block third-party cookies in iframes, which may affect session state.
+    </Warning>
+  </Step>
+  <Step title="Handle the driver onboarded webhook">
+    When the driver completes all steps, Rightcharge fires [PLACEHOLDER: driver onboarding completion webhook event name]. Your webhook handler should update the driver status in your platform from `pending_onboarding` to `onboarded`.
+
+    Example webhook payload:
+
+    ```json
+    {
+      "event": "[PLACEHOLDER: driver.onboarded]",
+      "data": {
+        "driver_id": "drv_def456",
+        "company_id": "comp_abc123",
+        "status": "onboarded",
+        "completed_at": "2024-01-15T10:15:00Z"
+      }
+    }
+    ```
+  </Step>
+  <Step title="Verify driver status via API">
+    Poll or retrieve the driver record to confirm the status transition.
+
+    <CodeGroup>
+
+    ```bash
+    curl [PLACEHOLDER: https://api.rightcharge.co.uk/v1/drivers/drv_def456] \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+
+    </CodeGroup>
+
+    Expected response:
+
+    ```json
+    {
+      "id": "drv_def456",
+      "status": "onboarded",
+      "onboarding_completed_at": "2024-01-15T10:15:00Z"
+    }
+    ```
+  </Step>
+</Steps>
+
+## API-driven onboarding
+
+<Tabs>
+  <Tab title="Hosted journey">
+    Use this mode when you want Rightcharge to manage the onboarding UI. Your platform only needs to create the driver and handle the completion webhook.
+
+    - Create driver via API
+    - Receive `onboarding_url`
+    - Present URL to driver
+    - Handle webhook on completion
+  </Tab>
+  <Tab title="API-driven mode">
+    Use this mode when you want to build custom onboarding screens in your platform. You call Rightcharge APIs for each step.
+
+    <Steps>
+      <Step title="Create driver">
+        Same as hosted journey: POST to create driver. Status will be `pending_onboarding`.
+      </Step>
+      <Step title="Register charger">
+        POST charger details for the driver. [PLACEHOLDER: confirm endpoint and payload for charger registration via API.]
+      </Step>
+      <Step title="Register vehicle">
+        POST vehicle details for the driver. [PLACEHOLDER: confirm endpoint and payload for vehicle registration via API.]
+      </Step>
+      <Step title="Confirm tariff">
+        POST tariff selection for the driver. [PLACEHOLDER: confirm endpoint and payload for tariff confirmation via API.]
+      </Step>
+      <Step title="Complete onboarding">
+        POST to mark onboarding complete. [PLACEHOLDER: confirm if explicit completion call is required or if the last step triggers completion automatically.]
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Onboarding states
+
+| State | Meaning |
+| --- | --- |
+| `pending_onboarding` | Driver record created, awaiting onboarding completion |
+| `onboarding_in_progress` | Driver has opened the onboarding URL or started API-driven steps |
+| `onboarded` | Driver has completed charger, vehicle and tariff registration |
+| `onboarding_failed` | Driver did not complete onboarding within the expiry period or a step failed verification |
+| `suspended` | Driver manually suspended by fleet manager or Rightcharge |
+
+<Note>
+  In the sandbox environment, verification steps are skipped and all test email addresses (such as `test@example.com`) pass validation instantly. Use this to test state transitions without real charger or vehicle data.
+</Note>
+
+## Sandbox notes
+
+- Verification is skipped in sandbox. You can complete onboarding using any test data.
+- Use `test@example.com` or any disposable email address for test drivers.
+- Webhooks fire immediately on completion. Ensure your webhook endpoint is reachable from the internet or use a tool like ngrok for local testing.
+- Onboarding URLs may expire. [PLACEHOLDER: confirm expiry duration and whether URLs can be regenerated via API.]
+
+## Next steps
+
+- [modules/driver-onboarding](/modules/driver-onboarding) for detailed module documentation
+- [guides/home-charging-reimbursement](/guides/home-charging-reimbursement) for the full reimbursement flow
+- [api-reference/webhooks/events](/api-reference/webhooks/events) for the complete webhook event catalogue

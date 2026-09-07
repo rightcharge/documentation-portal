@@ -1,0 +1,51 @@
+---
+title: "Rightcharge Webhooks Overview"
+sidebarTitle: "Overview"
+description: "Subscribe to Rightcharge lifecycle events via webhooks to drive automation in your platform as drivers, sessions and reimbursements change state."
+---
+
+Rightcharge sends webhook events to your registered HTTPS endpoints when resources change state. Use webhooks to keep your platform in sync without polling, for example updating a driver record when onboarding completes or triggering a payment when a reimbursement is approved.
+
+## How to register an endpoint
+
+Register your webhook endpoint via the partner dashboard or API:
+
+[PLACEHOLDER: webhook registration steps — engineering to confirm whether this is via dashboard, API endpoint, or partner support]
+
+Your endpoint must be an HTTPS URL that can accept `POST` requests.
+
+## Payload structure
+
+All webhook payloads share a common envelope:
+
+```json
+{
+  "event": "[PLACEHOLDER: event name]",
+  "created_at": "2024-01-15T10:30:00Z",
+  "data": {
+    "id": "drv_456",
+    "status": "onboarding_complete"
+  }
+}
+```
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `event` | string | The event type that triggered this webhook |
+| `created_at` | string | ISO 8601 timestamp when the event was emitted |
+| `data` | object | The resource object associated with the event |
+
+[PLACEHOLDER: confirm payload envelope structure — engineering to confirm]
+
+## Delivery and retries
+
+If your endpoint returns a non-2xx response or times out, Rightcharge retries delivery automatically. See the retries page for the full schedule and timeout behaviour.
+
+- [Delivery and retries](/api-reference/webhooks/retries)
+- [Signature verification](/api-reference/webhooks/verification)
+
+## What to read next
+
+- [Webhook events](/api-reference/webhooks/events) — full catalogue of available events
+- [Webhook verification](/api-reference/webhooks/verification) — how to verify webhook signatures
+- [Webhook retries](/api-reference/webhooks/retries) — retry schedule and acknowledgement behaviour

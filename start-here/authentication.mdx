@@ -1,0 +1,61 @@
+---
+title: "Authenticate with the Rightcharge API"
+sidebarTitle: "Authentication"
+description: "Learn how to obtain and use API keys to authenticate every Rightcharge API request, including sandbox and production key management."
+---
+
+Rightcharge uses API keys to authenticate every request. You must include your key in the `Authorization` header on every API call. This page explains how to obtain keys, manage sandbox and production environments, rotate credentials and keep them secure.
+
+## API keys
+
+You obtain API keys from the Rightcharge partner dashboard [PLACEHOLDER: partner dashboard URL]. Each key is scoped to your partner account and can be used to access all resources belonging to that account.
+
+- **Sandbox keys** are used for development and testing. All data is isolated and no real payments or charger connections are made.
+- **Production keys** are used for live traffic. They access real driver, charger and energy data and trigger actual reimbursements.
+
+## Header format
+
+Include your API key in the `Authorization` header using the `Bearer` scheme:
+
+```bash
+curl -X GET [PLACEHOLDER: base URL — e.g. https://api.rightcharge.co.uk/v1]/companies \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Sandbox vs production
+
+| Environment | Base URL | Data | Payments |
+| --- | --- | --- | --- |
+| Sandbox | [PLACEHOLDER] | Isolated test data | No real payments |
+| Production | [PLACEHOLDER] | Live partner data | Real payments |
+
+## Key rotation
+
+You can rotate API keys from the partner dashboard [PLACEHOLDER: partner dashboard URL]. When you generate a new key, the existing key remains valid for a grace period to allow you to update your integrations without downtime.
+
+<Info>
+  Existing keys remain valid for [PLACEHOLDER: grace period] after rotation.
+</Info>
+
+## Scopes
+
+[PLACEHOLDER: list of API key scopes — engineering to provide]
+
+## Security
+
+<Warning>
+  Never expose your API key in client-side code or public repositories.
+</Warning>
+
+<Tip>
+  Use environment variables to manage keys across sandbox and production. This keeps credentials out of your codebase and makes it easy to switch environments during deployment.
+</Tip>
+
+```bash
+# Set the key in your environment
+export RIGHTCHARGE_API_KEY="YOUR_API_KEY"
+
+# Use it in a curl call
+curl -X GET [PLACEHOLDER: base URL — e.g. https://api.rightcharge.co.uk/v1]/companies \
+  -H "Authorization: Bearer $RIGHTCHARGE_API_KEY"
+```

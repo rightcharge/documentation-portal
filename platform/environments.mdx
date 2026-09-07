@@ -1,0 +1,47 @@
+---
+title: "Sandbox and Production Environments"
+sidebarTitle: "Environments"
+description: "Learn how to use the Rightcharge sandbox for integration testing and how to graduate to production once your integration is complete."
+---
+
+Rightcharge provides two isolated environments so you can build and test your integration safely before going live. The sandbox environment lets you exercise every API endpoint and webhook flow with synthetic data, while production handles real driver information, live tariff lookups, and actual reimbursements.
+
+## Environment summary
+
+| Environment | Purpose | Base URL | Data persistence | Payments |
+| --- | --- | --- | --- | --- |
+| Sandbox | Integration testing | [PLACEHOLDER: sandbox base URL] | Reset on request | None |
+| Production | Live deployment | [PLACEHOLDER: production base URL] | Permanent | Real |
+
+## Sandbox behaviours
+
+The sandbox mirrors production logic as closely as possible, but several behaviours differ to support safe testing:
+
+- **Charger verification** is skipped. You can register test chargers without validating serial numbers or CPMS credentials.
+- **Tariff lookups** return synthetic tariff data. Real supplier integrations are not queried, so you will not incur live API calls or expose actual tariff records.
+- **Webhooks fire in real time** so you can test event-driven flows end to end.
+- **Onboarding journeys** skip real KYC and identity checks. Test drivers can complete onboarding instantly.
+
+[PLACEHOLDER: confirm with engineering which additional sandbox behaviours differ from production]
+
+## Graduating to production
+
+When your integration is complete, follow the [go-live checklist](/guides/go-live-checklist) to validate your setup before switching to production. The checklist covers API key rotation, webhook endpoint verification, session ingestion validation, and tariff accuracy checks.
+
+## Environment variables
+
+Manage base URLs through environment variables in your application configuration so you can switch between sandbox and production without code changes.
+
+```bash
+# Sandbox
+RIGHTCHARGE_BASE_URL=[PLACEHOLDER: sandbox base URL]
+RIGHTCHARGE_API_KEY=sk_test_...
+
+# Production
+RIGHTCHARGE_BASE_URL=[PLACEHOLDER: production base URL]
+RIGHTCHARGE_API_KEY=sk_live_...
+```
+
+<Warning>
+  Sandbox and production use separate API keys. Do not use production keys in test environments.
+</Warning>

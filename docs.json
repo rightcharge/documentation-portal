@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "theme": "luma",
+  "name": "Rightcharge",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#0F6FDE",
+    "light": "#3B8FF0",
+    "dark": "#0A52B3"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -18,20 +18,181 @@
         ]
       }
     ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Start Here",
+            "pages": [
+              "index",
+              "quickstart",
+              "start-here/choose-your-path",
+              "start-here/authentication"
+            ]
+          },
+          {
+            "group": "Platform",
+            "pages": [
+              "platform/overview",
+              "platform/architecture",
+              "platform/environments",
+              "platform/data-model"
+            ]
+          },
+          {
+            "group": "Solutions",
+            "pages": [
+              "solutions/overview",
+              "solutions/home-charging-reimbursement",
+              "solutions/tariff-based-costing",
+              "solutions/energy-payments",
+              "solutions/fleet-reporting"
+            ]
+          },
+          {
+            "group": "Modules",
+            "pages": [
+              "modules/overview",
+              "modules/driver-onboarding",
+              "modules/charger-integration",
+              "modules/vehicle-integration",
+              "modules/tariff-engine",
+              "modules/session-ingestion",
+              "modules/eligibility-policy",
+              "modules/reimbursement",
+              "modules/webhooks-module"
+            ]
+          },
+          {
+            "group": "Partner Blueprints",
+            "pages": [
+              "blueprints/overview",
+              "blueprints/cpms",
+              "blueprints/fleet-platform",
+              "blueprints/charger-manufacturer",
+              "blueprints/leasing-company",
+              "blueprints/energy-supplier",
+              "blueprints/vehicle-oem",
+              "blueprints/mobility-service-provider",
+              "blueprints/white-label-platform"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/home-charging-reimbursement",
+              "guides/driver-onboarding-flow",
+              "guides/connect-charger-source",
+              "guides/connect-vehicle-source",
+              "guides/submit-sessions",
+              "guides/webhook-verification",
+              "guides/go-live-checklist"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "API Conventions",
+            "pages": [
+              "api-reference/introduction",
+              "api-reference/authentication",
+              "api-reference/pagination",
+              "api-reference/idempotency",
+              "api-reference/rate-limits",
+              "api-reference/versioning"
+            ]
+          },
+          {
+            "group": "Charge Sessions",
+            "openapi": {
+              "source": "api-reference/openapi.json",
+              "directory": "api-reference"
+            },
+            "pages": [
+              "GET /charge-sessions/user/{user_id}",
+              "GET /charge-sessions/company/{company_id}",
+              "GET /charge-sessions/session/{session_id}",
+              "POST /charge-sessions/session/{session_id}",
+              "POST /charge-sessions/user/{user_id}/manual"
+            ]
+          },
+          {
+            "group": "Users",
+            "openapi": {
+              "source": "api-reference/openapi.json",
+              "directory": "api-reference"
+            },
+            "pages": [
+              "POST /users/create",
+              "POST /users/bulk-create",
+              "GET /users/{user_id}",
+              "POST /users/update/{user_id}",
+              "POST /admin/users/update/{user_id}",
+              "POST /users/deactivate/{user_id}",
+              "DELETE /users/integration/{user_id}/{integration_type}",
+              "GET /users/onboarding"
+            ]
+          },
+          {
+            "group": "Companies",
+            "openapi": {
+              "source": "api-reference/openapi.json",
+              "directory": "api-reference"
+            },
+            "pages": [
+              "POST /admin/companies",
+              "GET /admin/companies/{company_id}",
+              "DELETE /admin/companies/{company_id}",
+              "GET /admin/companies/{company_id}/users"
+            ]
+          },
+          {
+            "group": "Reseller Reports",
+            "openapi": {
+              "source": "api-reference/openapi.json",
+              "directory": "api-reference"
+            },
+            "pages": [
+              "GET /reseller/reports/transactions"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "api-reference/webhooks/overview",
+              "api-reference/webhooks/events",
+              "api-reference/webhooks/verification",
+              "api-reference/webhooks/retries"
+            ]
+          },
+          {
+            "group": "Errors and Lifecycle",
+            "pages": [
+              "api-reference/errors",
+              "api-reference/status-glossary"
+            ]
+          },
+          {
+            "group": "Supported Integrations",
+            "pages": [
+              "api-reference/integrations/charger-networks",
+              "api-reference/integrations/vehicle-data",
+              "api-reference/integrations/tariff-suppliers"
+            ]
+          },
+          {
+            "group": "Changelog",
+            "pages": [
+              "api-reference/changelog"
+            ]
+          }
+        ]
+      }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
@@ -40,14 +201,14 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:partners@rightcharge.co.uk",
+        "label": "Contact"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
+      "label": "Sandbox",
+      "href": "https://sandbox.rightcharge.co.uk"
     }
   },
   "contextual": {
@@ -55,18 +216,12 @@
       "copy",
       "view",
       "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
+      "claude"
     ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "linkedin": "https://linkedin.com/company/rightcharge"
     }
   }
 }

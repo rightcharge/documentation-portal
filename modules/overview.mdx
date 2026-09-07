@@ -1,0 +1,60 @@
+---
+title: "Rightcharge Modules: Build Your Integration"
+sidebarTitle: "Overview"
+description: "Explore the individual Rightcharge modules and combine them to build home charging reimbursement, costing and fleet reporting products."
+---
+
+Rightcharge modules are the building blocks of the platform. Pick the ones you need and combine them to create the solutions your business requires, whether that is home charging reimbursement, tariff-based costing, energy payments or fleet reporting.
+
+<CardGroup cols={2}>
+  <Card title="Driver Onboarding" href="/modules/driver-onboarding">
+    Collect driver, charger, vehicle and tariff details through a hosted journey or your own UI.
+  </Card>
+
+  <Card title="Charger Integration" href="/modules/charger-integration">
+    Connect home chargers via CPMS or manufacturer APIs to retrieve verified session data.
+  </Card>
+
+  <Card title="Vehicle Integration" href="/modules/vehicle-integration">
+    Link vehicle telematics and OEM data to attribute sessions and verify home charging.
+  </Card>
+
+  <Card title="Tariff Engine" href="/modules/tariff-engine">
+    Calculate exact electricity costs per session from real tariff and time-of-use data.
+  </Card>
+
+  <Card title="Session Ingestion" href="/modules/session-ingestion">
+    Ingest charging session data from any source for downstream processing.
+  </Card>
+
+  <Card title="Eligibility & Policy" href="/modules/eligibility-policy">
+    Apply programme rules and fraud controls before creating reimbursements.
+  </Card>
+
+  <Card title="Reimbursement" href="/modules/reimbursement">
+    Generate and manage driver reimbursements or supplier payments.
+  </Card>
+
+  <Card title="Webhooks" href="/modules/webhooks-module">
+    Subscribe to lifecycle events to trigger downstream workflows in your platform.
+  </Card>
+</CardGroup>
+
+## Module dependencies
+
+Some modules depend on others. Use the table below to understand which modules you need to enable for your chosen solution.
+
+| Module | Depends on | Required for |
+| --- | --- | --- |
+| Driver Onboarding | None | All solutions |
+| Charger Integration | None | Home charging reimbursement, fleet reporting |
+| Vehicle Integration | None | Improved accuracy (optional) |
+| Session Ingestion | Charger Integration (or direct submission) | Tariff-based costing, reimbursement, fleet reporting |
+| Tariff Engine | Session Ingestion | Tariff-based costing, reimbursement |
+| Eligibility & Policy | Session Ingestion, Driver Onboarding | Reimbursement |
+| Reimbursement | Tariff Engine, Eligibility & Policy | Home charging reimbursement, energy payments |
+| Webhooks | None | All solutions (recommended) |
+
+<Note>
+  Not all modules are required for every solution. See [solutions/overview](/solutions/overview) for a full mapping of modules to solutions.
+</Note>

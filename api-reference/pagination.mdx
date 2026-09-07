@@ -1,0 +1,67 @@
+---
+title: "Pagination in the Rightcharge API"
+sidebarTitle: "Pagination"
+description: "Learn how Rightcharge paginates list responses, including cursor-based pagination, page size limits and iterating through large result sets."
+---
+
+List endpoints return paginated responses to keep response sizes predictable and performant. This page explains the pagination style, request parameters, and how to iterate through large result sets.
+
+<Note>
+  [PLACEHOLDER: confirm pagination style and parameter names with engineering — cursor-based or offset?]
+</Note>
+
+## Pagination style
+
+Rightcharge uses [PLACEHOLDER: confirm pagination style — cursor-based or offset] pagination.
+
+## Response structure
+
+List endpoints return an envelope containing the data array and pagination metadata:
+
+```json
+{
+  "data": [
+    { "id": "drv_123", "first_name": "Alice", ... },
+    { "id": "drv_456", "first_name": "Bob", ... }
+  ],
+  "meta": {
+    "next_cursor": "abc123",
+    "total": 142
+  }
+}
+```
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `data` | array | The resource objects for this page |
+| `meta.next_cursor` | string | Cursor for the next page (null if last page) |
+| `meta.total` | integer | Total number of results across all pages |
+
+[PLACEHOLDER: confirm response envelope fields — engineering to confirm whether `next_cursor`, `next_page`, or another field is used]
+
+## Request parameters
+
+| Parameter | Type | Default | Maximum | Description |
+| --- | --- | --- | --- | --- |
+| `limit` | integer | [PLACEHOLDER] | [PLACEHOLDER] | Number of items per page |
+| `cursor` | string | — | — | Cursor from `meta.next_cursor` to fetch next page |
+
+[PLACEHOLDER: confirm parameter names and default/max values with engineering]
+
+## Iterating through pages
+
+Fetch the first page without a cursor, then use `meta.next_cursor` from each response to request the next page until it is null.
+
+```bash
+curl -X GET "https://[PLACEHOLDER: base URL]/v1/drivers?limit=25" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+Use the returned cursor for the next request:
+
+```bash
+curl -X GET "https://[PLACEHOLDER: base URL]/v1/drivers?limit=25&cursor=abc123" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+Stop when `meta.next_cursor` is null or `data` is empty.

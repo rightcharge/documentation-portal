@@ -1,0 +1,47 @@
+---
+title: "Tariff-Based Costing for EV Charging Sessions"
+sidebarTitle: "Tariff Costing"
+description: "Calculate the exact electricity cost of every charging session using real driver tariff data, time-of-use rates and smart charging schedules."
+---
+
+Rightcharge's tariff engine calculates the cost of each charging session using the driver's actual electricity tariff. Instead of applying a flat-rate approximation, the engine factors in time-of-use rates, standing charges, and smart charging schedules to produce an accurate cost per session.
+
+## What this solves
+
+Flat-rate cost estimates lead to inaccurate reimbursement and poor driver trust. Tariff-based costing gives you:
+
+- accurate reimbursement amounts that reflect what the driver actually pays
+- detailed cost reporting for fleet managers and finance teams
+- a foundation for carbon accounting and sustainability reporting
+- transparent billing when energy is paid directly to suppliers
+
+## Modules required
+
+- [Session Ingestion](/modules/session-ingestion)
+- [Tariff Engine](/modules/tariff-engine)
+- [Vehicle Integration](/modules/vehicle-integration) (optional, for smart charging attribution)
+
+## How it works
+
+Session data (start time, end time, energy in kWh) is combined with the driver's tariff details. The tariff engine looks up the applicable unit rates for the time windows covered by the session, adds any standing charge, and returns the total cost.
+
+If the vehicle integration module is connected, the engine can also distinguish between smart and non-smart charging and apply the appropriate rate structure.
+
+## Key concepts
+
+- **Unit rate**: the price per kWh applied during the session. Time-of-use tariffs have multiple unit rates that change throughout the day.
+- **Standing charge**: a fixed daily or monthly charge added to the session cost, prorated according to your configuration.
+- **Time-of-use rates**: tariffs where the unit rate varies by time of day, day of week, or season.
+- **Smart vs non-smart charging attribution**: some tariffs offer lower rates for smart charging sessions. Vehicle integration helps identify which sessions qualify.
+
+## Data requirements
+
+To calculate costs accurately, you must provide:
+
+- session kWh and timestamps (start and end in UTC)
+- driver tariff details, including unit rates and standing charges
+- or an active integration with a tariff supplier that can resolve the tariff automatically
+
+<Note>
+  Tariff data source: [PLACEHOLDER: list of supported tariff sources / supplier integrations]
+</Note>

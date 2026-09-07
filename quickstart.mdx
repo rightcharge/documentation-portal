@@ -1,47 +1,123 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Get Started with Rightcharge in Minutes"
+sidebarTitle: "Quickstart"
+description: "Walk through your first Rightcharge API call: authenticate, create a company, add a driver, and receive a test webhook in your sandbox environment."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
+This guide takes you from zero to a working Rightcharge integration in a few minutes. You will obtain sandbox credentials, create a company, add a driver, complete sandbox onboarding and receive a test webhook.
 
 ## Prerequisites
 
-Before you begin, you must have:
+Before you start, make sure you have:
 
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
+- A sandbox API key from the partner dashboard [PLACEHOLDER: sandbox dashboard URL]
+- An HTTPS endpoint that can receive webhooks (ngrok is fine for local testing)
+- Basic familiarity with REST APIs and curl
 
-## Get started
+<Tip>
+  All sandbox data is isolated. No real payments or charger connections are made.
+</Tip>
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
+  <Step title="Get your sandbox credentials">
+    Log in to the Rightcharge partner dashboard [PLACEHOLDER: sandbox dashboard URL] and generate a sandbox API key. Keep this key secure. You will use it in the `Authorization` header for every request.
+
+    <Warning>
+      Never expose your API key in client-side code or public repositories.
+    </Warning>
+  </Step>
+  <Step title="Make your first API call">
+    Create a company using the Rightcharge API. Replace `YOUR_API_KEY` with your sandbox key and adjust the base URL if your integration uses a different endpoint.
 
     ```bash
-    npm install your-package
+    curl -X POST [PLACEHOLDER: base URL — e.g. https://api.rightcharge.co.uk/v1]/companies \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "Acme Fleet",
+        "external_id": "acme-fleet-001"
+      }'
+    ```
+
+    You should receive a response like this:
+
+    ```json
+    {
+      "id": "comp_1234567890abcdef",
+      "name": "Acme Fleet",
+      "status": "active",
+      "created_at": "2024-01-15T09:30:00Z"
+    }
+    ```
+
+    Save the `id` value. You will need it to create a driver in the next step.
+  </Step>
+  <Step title="Create a driver">
+    Add a driver under the company you just created. The driver will be created with a `pending_onboarding` status and an `onboarding_url` that you can use in sandbox mode.
+
+    ```bash
+    curl -X POST [PLACEHOLDER: base URL — e.g. https://api.rightcharge.co.uk/v1]/drivers \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "company_id": "comp_1234567890abcdef",
+        "first_name": "Jane",
+        "last_name": "Doe",
+        "email": "jane.doe@example.com"
+      }'
+    ```
+
+    Expected response:
+
+    ```json
+    {
+      "id": "drv_0987654321fedcba",
+      "company_id": "comp_1234567890abcdef",
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "email": "jane.doe@example.com",
+      "status": "pending_onboarding",
+      "onboarding_url": "[PLACEHOLDER: onboarding URL]",
+      "created_at": "2024-01-15T09:31:00Z"
+    }
     ```
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+  <Step title="Complete onboarding in sandbox">
+    In sandbox mode, the driver follows the `onboarding_url` to complete the onboarding journey. Sandbox onboarding skips real charger and energy verification, so you can test the full flow without hardware or live supplier connections.
 
-    ```bash
-    your-cli init
-    ```
+    Once the driver completes onboarding, Rightcharge sends a webhook to your registered endpoint.
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
+  <Step title="Receive a webhook">
+    Register your webhook endpoint in the partner dashboard [PLACEHOLDER: sandbox dashboard URL], then trigger the onboarding flow. You will receive a payload similar to the following when onboarding completes:
 
-    ```bash
-    your-cli start
+    ```json
+    {
+      "event": "[PLACEHOLDER: webhook event name for driver onboarding completion]",
+      "data": {
+        "driver_id": "drv_0987654321fedcba",
+        "company_id": "comp_1234567890abcdef",
+        "status": "onboarded",
+        "completed_at": "2024-01-15T09:35:00Z"
+      }
+    }
     ```
+
+    Rightcharge signs webhooks with HMAC-SHA256. Verify the signature before processing the payload. See the [webhook verification guide](/guides/webhook-verification) for details.
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+## Next steps
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>
+<CardGroup cols={3}>
+  <Card title="Platform Overview" href="/platform/overview">
+    Understand how Rightcharge is structured
+  </Card>
+
+  <Card title="Choose Your Path" href="/start-here/choose-your-path">
+    Find the right integration model for your organisation
+  </Card>
+
+  <Card title="Home Charging Reimbursement Guide" href="/guides/home-charging-reimbursement">
+    Build a complete reimbursement flow
+  </Card>
+</CardGroup>

@@ -1,0 +1,57 @@
+---
+title: "Launch Home Charging Reimbursement for Fleets"
+sidebarTitle: "Reimbursement"
+description: "Deploy accurate, policy-controlled home charging reimbursement for fleet drivers using Rightcharge's end-to-end infrastructure."
+---
+
+Home charging reimbursement lets fleet drivers charge their EVs at home and be repaid accurately for the electricity they use. Rightcharge calculates the cost based on each driver's actual electricity tariff, applies your policy and eligibility rules, and generates a reimbursement record you can use to pay the driver or report internally.
+
+## What this solution delivers
+
+- Tariff-accurate cost calculation for every charging session
+- Driver onboarding with charger and vehicle verification
+- Policy and eligibility controls to prevent fraud and enforce fleet rules
+- Reimbursement reporting and lifecycle tracking
+- Real-time webhooks for state changes at every step
+
+## Modules required
+
+This solution combines several Rightcharge modules:
+
+- [Driver Onboarding](/modules/driver-onboarding)
+- [Charger Integration](/modules/charger-integration)
+- [Tariff Engine](/modules/tariff-engine)
+- [Session Ingestion](/modules/session-ingestion)
+- [Eligibility & Policy](/modules/eligibility-policy)
+- [Reimbursement](/modules/reimbursement)
+
+## How it works
+
+<Steps>
+  <Step title="Company and driver set-up">
+    Create a company and register drivers via the API or a hosted onboarding journey. Each driver is linked to your partner account and can be tagged with an `external_id` for easy mapping.
+  </Step>
+  <Step title="Driver onboarding">
+    The driver completes onboarding: they register their home charger, link their vehicle, and provide their electricity tariff details. Rightcharge verifies the charger connection and validates the tariff data.
+  </Step>
+  <Step title="Session recording">
+    Charging sessions are ingested automatically from the connected CPMS or charger manufacturer, or submitted manually via the API. Each session is matched to the driver and charger.
+  </Step>
+  <Step title="Cost calculation">
+    The tariff engine calculates the exact electricity cost for the session using the driver's actual tariff, including time-of-use rates and standing charges.
+  </Step>
+  <Step title="Policy checks">
+    The eligibility and policy engine applies your rules: session time windows, maximum kWh limits, duplicate detection, and any custom eligibility criteria you have configured.
+  </Step>
+  <Step title="Reimbursement created">
+    A reimbursement is generated for the approved sessions. You receive a webhook event and can retrieve the reimbursement via the API for payment processing or reporting.
+  </Step>
+</Steps>
+
+## Key considerations
+
+- **Data requirements**: you need charger session data (start time, end time, kWh) and the driver's electricity tariff details. If the driver does not know their tariff, Rightcharge can look it up through integrated tariff suppliers where available.
+- **Policy configuration**: define your eligibility rules before going live. [PLACEHOLDER: policy configuration reference]
+- **Supported countries**: confirm where tariff lookups and reimbursement flows are available. [PLACEHOLDER: country availability]
+
+For a step-by-step implementation guide, see [Home Charging Reimbursement Guide](/guides/home-charging-reimbursement).

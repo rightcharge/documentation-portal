@@ -1,0 +1,65 @@
+---
+title: "Rate Limits for the Rightcharge API"
+sidebarTitle: "Rate Limits"
+description: "Understand the Rightcharge API rate limits, how to read rate limit headers and how to handle 429 Too Many Requests responses."
+---
+
+The Rightcharge API enforces rate limits to ensure platform stability. This page describes the current limits, how to read rate limit headers, and how to handle `429 Too Many Requests` responses.
+
+## Current limits
+
+[PLACEHOLDER: exact rate limits — requests per second/minute per API key — engineering to provide]
+
+## Rate limit headers
+
+[PLACEHOLDER: header names — engineering to confirm. Common examples include `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`]
+
+| Header | Description |
+| --- | --- |
+| [PLACEHOLDER] | Maximum requests allowed in the current window |
+| [PLACEHOLDER] | Requests remaining in the current window |
+| [PLACEHOLDER] | Timestamp when the rate limit window resets |
+
+## Handling 429 Too Many Requests
+
+When you exceed a rate limit, the API returns `429 Too Many Requests`. Implement exponential backoff with jitter to retry safely.
+
+The `Retry-After` header indicates when you may retry [PLACEHOLDER: confirm `Retry-After` header name and format — engineering to confirm].
+
+### Bash example
+
+```bash
+# Retry with exponential backoff
+for i in 1 2 4 8; do
+  response=$(curl -s -o /dev/null -w "%{http_code}" -X GET "https://[PLACEHOLDER: base URL]/v1/drivers" \
+    -H "Authorization: Bearer YOUR_API_KEY")
+  if [ "$response" != "429" ]; then
+    break
+  fi
+  sleep $i
+done
+```
+
+### Pseudocode
+
+```python
+import time, random
+
+def request_with_backoff(url, headers, max_retries=5):
+    for attempt in range(max_retries):
+        response = http_get(url, headers=headers)
+        if response.status != 429:
+            return response
+        delay = (2 ** attempt) + random.uniform(0, 1)
+        time.sleep(delay)
+    raise Exception("Rate limit exceeded after maximum retries")
+```
+
+<Note>
+  Sandbox rate limits differ from production. [PLACEHOLDER: sandbox rate limit values — engineering to provide]
+</Note>
+
+## What to read next
+
+- [Errors reference](/api-reference/errors) — full list of error codes
+- [Versioning](/api-reference/versioning) — how API changes are communicated

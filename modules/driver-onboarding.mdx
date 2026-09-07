@@ -1,0 +1,78 @@
+---
+title: "Driver Onboarding Module"
+sidebarTitle: "Driver Onboarding"
+description: "Onboard fleet drivers through a Rightcharge-hosted journey or your own UI, collecting charger, vehicle and tariff details required for reimbursement."
+---
+
+The Driver Onboarding module manages the journey from driver invitation to a fully onboarded, verified profile with connected charger, vehicle and tariff. You can use Rightcharge's hosted journey or build your own UI and call the Rightcharge APIs directly.
+
+<Tabs>
+  <Tab title="Hosted Journey">
+    Rightcharge provides a branded, embeddable onboarding URL. Your driver completes every step in browser without you building a custom UI.
+
+    <Steps>
+      <Step title="Create a driver">
+        Call the Rightcharge API to create a driver record. The response includes an `onboarding_url`.
+      </Step>
+      <Step title="Send the link">
+        Deliver the `onboarding_url` to the driver via your preferred channel (email, SMS, in-app).
+      </Step>
+      <Step title="Driver completes steps">
+        The driver follows the hosted journey: accepts the invitation, adds their home address, connects their charger, connects their vehicle and confirms their electricity tariff.
+      </Step>
+      <Step title="Receive webhook">
+        Rightcharge fires a webhook when onboarding completes or fails. See [modules/webhooks-module](/modules/webhooks-module).
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="API-driven">
+    You build the UI and call each onboarding step via the Rightcharge API. This gives you full control over branding, sequencing and validation.
+
+    <Steps>
+      <Step title="Accept invitation">
+        The driver accepts the programme invitation via your UI. Your backend calls the Rightcharge API to record acceptance.
+      </Step>
+      <Step title="Add address">
+        Collect and submit the driver's home address. This is used for home-location verification during session processing.
+      </Step>
+      <Step title="Connect charger">
+        Submit charger details (make, model, serial number). Rightcharge attempts to link the charger to a supported integration.
+      </Step>
+      <Step title="Connect vehicle">
+        Submit vehicle registration or VIN. Rightcharge attempts to link the vehicle to a supported telematics or OEM integration.
+      </Step>
+      <Step title="Confirm tariff">
+        The driver selects or confirms their electricity tariff and supplier. This feeds the Tariff Engine for per-session costing.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Onboarding states
+
+A driver moves through the following states during onboarding:
+
+| State | Description |
+| --- | --- |
+| `pending_onboarding` | Driver record created; invitation sent but not yet accepted. |
+| `onboarding_in_progress` | Driver has accepted and is completing steps. |
+| `onboarding_complete` | All required steps finished; driver is eligible for session processing. |
+
+[PLACEHOLDER: full state machine — engineering to confirm all states and transitions]
+
+## Data collected
+
+The onboarding module collects the information required for downstream modules:
+
+- **Home address**: used for home-location verification in the Eligibility & Policy module.
+- **Charger details**: make, model and serial number; used by the Charger Integration module to retrieve session data.
+- **Vehicle details**: registration number and VIN; used by the Vehicle Integration module for session attribution.
+- **Electricity tariff and supplier**: unit rate, standing charge and time-of-use schedule; used by the Tariff Engine for cost calculation.
+
+## Sandbox behaviour
+
+In the sandbox environment, charger and vehicle verification steps are skipped. A synthetic tariff is applied automatically so you can test the full onboarding flow without live integrations.
+
+## Related guides
+
+- [Driver onboarding flow](/guides/driver-onboarding-flow)

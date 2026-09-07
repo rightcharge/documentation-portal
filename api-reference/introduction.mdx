@@ -1,0 +1,63 @@
+---
+title: "Rightcharge API Reference"
+sidebarTitle: "Overview"
+description: "Overview of the Rightcharge REST API: base URLs, request format, response format, authentication, versioning and how to read this reference."
+---
+
+The Rightcharge API is a RESTful HTTP API. All requests use JSON. Authentication is via API key in the `Authorization` header. This page explains how requests and responses are structured, how to choose the right environment, and how the rest of this reference is organised.
+
+## Base URLs
+
+| Environment | Base URL |
+| --- | --- |
+| Sandbox | [PLACEHOLDER: sandbox base URL — engineering to provide] |
+| Production | [PLACEHOLDER: production base URL — engineering to provide] |
+
+Use the sandbox environment for development and integration testing. Use production only when your integration has passed the go-live checklist.
+
+<Note>
+  The Rightcharge OpenAPI specification will be added to this reference when the production spec is available. Endpoint pages will then be auto-generated from the spec. Until then, use the resource pages in this section as a contract reference — but treat all field names and paths as provisional until confirmed.
+</Note>
+
+## Request format
+
+All requests must include:
+
+- `Content-Type: application/json` for requests with a body
+- `Authorization: Bearer YOUR_API_KEY`
+- A valid JSON body for `POST` and `PATCH` requests
+
+## Response format
+
+All responses return JSON. Success responses include the resource object. Error responses include a standard error envelope.
+
+### Error response structure
+
+```json
+{
+  "error": {
+    "code": "invalid_request",
+    "message": "The request body contains invalid fields.",
+    "details": [
+      {
+        "field": "email",
+        "issue": "must be a valid email address"
+      }
+    ]
+  }
+}
+```
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `code` | string | A machine-readable error code |
+| `message` | string | A human-readable description of the error |
+| `details` | array | Optional field-level validation errors |
+
+## What to read next
+
+- [Authentication](/api-reference/authentication) — how to obtain and use API keys
+- [Pagination](/api-reference/pagination) — how to iterate through list responses
+- [Idempotency](/api-reference/idempotency) — how to safely retry write requests
+- [Rate limits](/api-reference/rate-limits) — limits and how to handle `429` responses
+- [Versioning](/api-reference/versioning) — how breaking changes are communicated

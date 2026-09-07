@@ -1,0 +1,74 @@
+---
+title: "Rightcharge Platform Overview"
+sidebarTitle: "Overview"
+description: "Understand what the Rightcharge platform provides, how its modules fit together, and how partners integrate it into their existing products."
+---
+
+Rightcharge is a modular infrastructure platform. You integrate selected modules via REST APIs, hosted journeys, or webhooks to deliver home-charging services for fleets. The platform handles the heavy lifting of driver onboarding, charger and vehicle data, electricity tariff costing, session ingestion, eligibility, reimbursement, and reporting, while you retain full ownership of the customer relationship.
+
+## What the platform covers
+
+<CardGroup cols={2}>
+  <Card title="Driver Onboarding" href="/modules/driver-onboarding">
+    Host onboarding journeys or use the API to register drivers, collect consent, and verify identity.
+  </Card>
+
+  <Card title="Charger Integration" href="/modules/charger-integration">
+    Connect home chargers via CPMS, direct integrations, or manufacturer APIs.
+  </Card>
+
+  <Card title="Vehicle Integration" href="/modules/vehicle-integration">
+    Link EVs through telematics or OEM APIs for session attribution and eligibility.
+  </Card>
+
+  <Card title="Tariff Engine" href="/modules/tariff-engine">
+    Calculate electricity costs from real driver tariff data, including time-of-use rates.
+  </Card>
+
+  <Card title="Session Ingestion" href="/modules/session-ingestion">
+    Ingest charging session data from any source to power reimbursement and reporting.
+  </Card>
+
+  <Card title="Eligibility & Policy" href="/modules/eligibility-policy">
+    Define who qualifies for reimbursement and apply fraud and policy controls.
+  </Card>
+
+  <Card title="Reimbursement" href="/modules/reimbursement">
+    Calculate and generate reimbursements for drivers or suppliers.
+  </Card>
+
+  <Card title="Webhooks" href="/modules/webhooks-module">
+    Receive real-time events for driver state changes, sessions, and reimbursements.
+  </Card>
+</CardGroup>
+
+## How partners interact
+
+<Tabs>
+  <Tab title="API-first">
+    You build the driver-facing UI and orchestrate all flows by calling Rightcharge REST APIs directly. Best for partners with existing apps or portals who want full control over branding and UX.
+  </Tab>
+  <Tab title="Hosted journeys">
+    You embed pre-built Rightcharge onboarding and management journeys via hosted URLs or iframes. Best for partners who want to go live quickly without building custom front ends.
+  </Tab>
+  <Tab title="Hybrid">
+    You mix API calls for core data operations with hosted journeys for complex flows such as driver onboarding or tariff selection. This is the most common integration pattern.
+  </Tab>
+</Tabs>
+
+## Who the platform is for
+
+Rightcharge serves a range of partner types, each integrating the modules that match their product and customer base.
+
+- **Fleet platforms** add home-charging reimbursement and reporting to their fleet management software.
+- **CPMS providers** extend their network with home charger enrolment and session ingestion.
+- **Charger manufacturers** enable fleet programmes by connecting their hardware to tariff and reimbursement engines.
+- **Leasing companies** offer home-charging benefits to drivers as part of their vehicle lease packages.
+- **Energy suppliers** launch fleet energy programmes with accurate tariff-based costing and direct payment flows.
+- **Vehicle OEMs** embed charging reimbursement into their driver apps and connected services.
+- **Mobility service providers** manage home charging for ride-hail, delivery, and car-sharing fleets.
+- **White-label platforms** resell Rightcharge capabilities under their own brand to sub-partners.
+
+<Note>
+  The platform is designed to complement, not replace, your existing systems. Rightcharge acts as the infrastructure layer; you own the customer relationship and front-end experience.
+</Note>

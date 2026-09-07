@@ -1,0 +1,43 @@
+---
+title: "API Versioning and Deprecation Policy"
+sidebarTitle: "Versioning"
+description: "Understand how Rightcharge versions its API, how breaking changes are communicated and how to migrate between API versions."
+---
+
+Rightcharge versions its API so you can pin your integration to a stable contract and migrate on your own schedule. This page explains the versioning approach, how breaking and non-breaking changes are handled, and what to expect when an endpoint is deprecated.
+
+## Versioning approach
+
+Rightcharge versions its API via the URL path (for example, `/v1/`). [PLACEHOLDER: confirm versioning approach — URL path vs header — engineering to confirm]
+
+## Current version
+
+The current stable API version is [PLACEHOLDER: current stable API version — engineering to confirm].
+
+## Breaking vs non-breaking changes
+
+| Change type | Example | Communication |
+| --- | --- | --- |
+| Breaking | Removing a field, changing a field type, changing URL path | Version bump + deprecation notice |
+| Non-breaking | Adding an optional field, adding a new endpoint, expanding an enum | Changelog entry only |
+
+## Deprecation policy
+
+When an endpoint or field is deprecated, Rightcharge will:
+
+1. Announce the deprecation in the [changelog](/api-reference/changelog) with [PLACEHOLDER: deprecation notice period — engineering to confirm] notice.
+2. Mark deprecated endpoints with a [PLACEHOLDER: deprecation header, for example `Sunset` — engineering to confirm] header in responses.
+3. Maintain the deprecated version until the announced sunset date.
+
+<Note>
+  Always pin to a specific version in production code. Do not call unversioned endpoints.
+</Note>
+
+## Migration guides
+
+Version migration guides are published in the [changelog](/api-reference/changelog) when a new version is released.
+
+## What to read next
+
+- [Changelog](/api-reference/changelog) — dated list of API changes
+- [Introduction](/api-reference/introduction) — base URLs and request format

@@ -1,0 +1,91 @@
+---
+title: "Go-Live Checklist for Rightcharge Integration"
+sidebarTitle: "Go-Live Checklist"
+description: "Complete this checklist before moving your Rightcharge integration from sandbox to production to ensure a smooth, reliable launch."
+---
+
+Before going live, verify all integration points in the Rightcharge sandbox and confirm the following items. Use this checklist as a final review with your engineering team and the Rightcharge partner team.
+
+<Tip>
+  Run through the canonical guide ([guides/home-charging-reimbursement](/guides/home-charging-reimbursement)) end-to-end in sandbox at least twice before requesting go-live review.
+</Tip>
+
+## Account and access
+
+- [ ] Production API keys obtained from Rightcharge
+- [ ] All team members who need access have been invited to the production dashboard
+- [ ] Support contact and escalation path confirmed with Rightcharge
+
+## Authentication
+
+- [ ] Production API key stored in a secure environment variable
+- [ ] Sandbox API key removed from all production configuration and code
+- [ ] Key rotation process documented for your team
+
+## Company and driver setup
+
+- [ ] Company creation tested end-to-end in sandbox
+- [ ] Driver onboarding tested end-to-end in sandbox
+- [ ] `onboarding_url` delivery confirmed (email, in-app notification or redirect)
+- [ ] Driver status transitions handled correctly in your platform
+
+## Session ingestion
+
+- [ ] At least one session successfully ingested in sandbox (automatic or manual)
+- [ ] Duplicate detection tested by resubmitting the same `external_session_id`
+- [ ] Error handling for rejected sessions implemented in your platform
+- [ ] Validation error responses parsed and surfaced to operators
+
+## Tariff and cost calculation
+
+- [ ] Tariff applied to a test session and cost result reviewed
+- [ ] Cost amount is reasonable and matches expected unit rates
+- [ ] Time-of-use scenario tested (if your tariff has variable rates)
+- [ ] Tariff breakdown reviewed for accuracy
+
+## Eligibility and policy
+
+- [ ] Policy rules configured and reviewed with Rightcharge partner team
+- [ ] Edge cases tested: monthly cap reached, fraud flag triggered, non-home session
+- [ ] Rejection handling in place for each policy failure path
+- [ ] Fleet manager or driver notified appropriately on rejection
+
+## Reimbursement
+
+- [ ] Reimbursement created for at least one eligible test session
+- [ ] Reimbursement amount matches calculated session cost
+- [ ] Status transitions tracked (pending to approved to paid)
+- [ ] Reimbursement webhook received and processed in your platform
+
+## Webhooks
+
+- [ ] All subscribed events registering and delivering to your endpoint
+- [ ] Signature verification implemented in production code
+- [ ] Retry handling in place (return 2xx for processed events, 4xx/5xx only for genuine errors)
+- [ ] Webhook endpoint idempotent (safe to process the same event twice)
+
+## Error handling
+
+- [ ] 4xx responses handled gracefully (validation errors, missing resources)
+- [ ] 5xx responses handled with exponential backoff and retry
+- [ ] Idempotency keys in use for session submission and reimbursement triggers
+- [ ] Circuit breaker or fallback logic in place for critical paths
+
+## Reporting
+
+- [ ] GET reimbursements returning expected data for a test date range
+- [ ] Pagination handled correctly for large result sets
+- [ ] Export format compatible with your payroll or finance system
+
+## Rightcharge sign-off
+
+- [ ] Integration reviewed by Rightcharge partner team
+- [ ] Any outstanding questions or blockers resolved
+- [ ] Go-live date agreed
+
+[PLACEHOLDER: confirm contact details and process for requesting partner review and production access.]
+
+## Next steps
+
+- [start-here/authentication](/start-here/authentication) for API key setup
+- [platform/environments](/platform/environments) for sandbox and production environment details

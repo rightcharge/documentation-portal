@@ -1,0 +1,69 @@
+---
+title: "Connect a Vehicle Data Source to Rightcharge"
+sidebarTitle: "Connect Vehicle Source"
+description: "Configure a telematics provider or OEM connected vehicle API to enable session attribution and home charging verification."
+---
+
+Vehicle data is optional but improves session attribution and home charging verification. When Rightcharge can correlate charger data with vehicle location or state of charge, it reduces false negatives in policy checks and strengthens fraud controls.
+
+<Tabs>
+  <Tab title="Telematics API">
+    Connect a fleet telematics provider to push vehicle location, charging state and odometer readings to Rightcharge.
+
+    <Steps>
+      <Step title="Contact Rightcharge to enable the integration">
+        Provide your telematics provider name and account details. Rightcharge will configure the integration for your fleet. [PLACEHOLDER: list supported telematics providers and configuration steps per provider.]
+      </Step>
+      <Step title="Map vehicles to drivers">
+        During driver onboarding, the driver registers their vehicle. Rightcharge links the vehicle VIN or telematics identifier to the driver record.
+      </Step>
+      <Step title="Data retrieved">
+        Rightcharge retrieves the following data points from the telematics provider:
+
+        - Vehicle location (latitude, longitude) for home charging verification
+        - Charging state (plugged in, charging, idle)
+        - Battery state of charge (start and end percentages)
+        - Odometer readings for mileage validation [PLACEHOLDER: confirm exact data fields retrieved per provider.]
+      </Step>
+      <Step title="Impact on session processing">
+        Vehicle location data strengthens the home charging verification rule. If the vehicle is confirmed at the registered home address during the session window, the session is more likely to pass eligibility checks.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="OEM connected vehicle API">
+    Connect an OEM connected vehicle API to retrieve charging and location data directly from the vehicle manufacturer.
+
+    <Steps>
+      <Step title="Contact Rightcharge to enable the integration">
+        Provide your OEM name and any required API credentials. Rightcharge will configure the integration. [PLACEHOLDER: list supported OEMs and configuration steps per manufacturer.]
+      </Step>
+      <Step title="Driver authorises data sharing">
+        The driver may need to authorise Rightcharge to access their vehicle data through the OEM's consent flow. This step is typically handled during onboarding. [PLACEHOLDER: confirm if driver authorisation is required and how it is presented.]
+      </Step>
+      <Step title="Data retrieved">
+        Rightcharge retrieves the following data points from the OEM API:
+
+        - Vehicle location for home charging verification
+        - Charging sessions and energy delivered
+        - Battery state of charge [PLACEHOLDER: confirm exact data fields retrieved per OEM.]
+      </Step>
+      <Step title="Impact on session processing">
+        OEM data can supplement or replace charger data for session ingestion. If both sources are available, Rightcharge correlates them to improve accuracy.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Without vehicle integration
+
+If you do not connect a vehicle data source, Rightcharge relies on charger-based attribution alone. Sessions are attributed to the driver who registered the charger, and home charging verification uses the registered charger address. This mode works for most fleets but may produce more manual review cases if the charger is shared or the address is ambiguous.
+
+<Note>
+  Vehicle integration is recommended for large fleets, shared chargers, or strict fraud controls. For small fleets with dedicated home chargers, charger-based attribution is usually sufficient.
+</Note>
+
+## Next steps
+
+- [modules/vehicle-integration](/modules/vehicle-integration) for detailed module documentation
+- [guides/home-charging-reimbursement](/guides/home-charging-reimbursement) for the full reimbursement flow
+- [modules/eligibility-policy](/modules/eligibility-policy) for policy and fraud control configuration

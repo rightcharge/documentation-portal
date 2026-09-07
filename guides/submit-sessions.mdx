@@ -1,0 +1,101 @@
+---
+title: "Submit Charging Sessions to Rightcharge"
+sidebarTitle: "Submit Sessions"
+description: "Manually submit home charging session data to Rightcharge via the session ingestion API for processing, cost calculation and reimbursement."
+---
+
+If your CPMS or charger integration does not push sessions automatically, submit them directly via the Rightcharge API. This guide covers the submission format, idempotency, validation errors and bulk submission.
+
+## Submit a single session
+
+<Steps>
+  <Step title="Build the session payload">
+    Include the following fields in your request body. All timestamps must be in ISO 8601 format with timezone.
+
+    | Field | Type | Required | Description |
+    | --- | --- | --- | --- |
+    | `driver_id` | string | Yes | Rightcharge driver identifier |
+    | `charger_id` | string | Yes | Rightcharge charger identifier |
+    | `start_time` | string | Yes | Session start timestamp (ISO 8601) |
+    | `end_time` | string | Yes | Session end timestamp (ISO 8601) |
+    | `energy_kwh` | number | Yes | Energy delivered in kilowatt-hours |
+    | `external_session_id` | string | Yes | Stable identifier from your system |
+    | [PLACEHOLDER: additional fields] | [PLACEHOLDER: confirm additional optional fields] | No | [PLACEHOLDER: describe any optional fields] |
+  </Step>
+  <Step title="POST the session">
+    <CodeGroup>
+
+    ```bash
+    curl -X POST [PLACEHOLDER: https://api.rightcharge.co.uk/v1/sessions] \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "driver_id": "drv_def456",
+        "charger_id": "chr_ghi789",
+        "start_time": "2024-01-15T18:00:00Z",
+        "end_time": "2024-01-15T22:30:00Z",
+        "energy_kwh": 24.5,
+        "external_session_id": "session-2024-01-15-001"
+      }'
+    ```
+
+    </CodeGroup>
+  </Step>
+  <Step title="Handle the response">
+    Expected success response:
+
+    ```json
+    {
+      "id": "sess_jkl012",
+      "driver_id": "drv_def456",
+      "charger_id": "chr_ghi789",
+      "start_time": "2024-01-15T18:00:00Z",
+      "end_time": "2024-01-15T22:30:00Z",
+      "energy_kwh": 24.5,
+      "external_session_id": "session-2024-01-15-001",
+      "status": "received",
+      "created_at": "2024-01-15T22:31:00Z"
+    }
+    ```
+
+    Rightcharge processes the session asynchronously. You will receive a webhook when processing completes. See [api-reference/webhooks/events](/api-reference/webhooks/events) for event details.
+  </Step>
+</Steps>
+
+## Idempotency
+
+Rightcharge uses `external_session_id` as an idempotency key. If you submit a session with an `external_session_id` that already exists, Rightcharge returns the original session record without creating a duplicate.
+
+This is useful when:
+
+- Your system retries a submission after a network timeout
+- A CPMS pushes the same session multiple times
+- You are backfilling historical data and want to avoid duplicates
+
+<Warning>
+  Choose a stable, deterministic `external_session_id`. Do not generate a new random ID on retry. Use the same identifier your CPMS or charger source uses.
+</Warning>
+
+## Validation errors
+
+If a session fails validation, the API returns a 4xx response with an error body.
+
+| Error | Cause | Resolution |
+| --- | --- | --- |
+| [PLACEHOLDER: validation error code for missing driver_id] | `driver_id` not found or not provided | Verify the driver exists and the ID is correct |
+| [PLACEHOLDER: validation error code for missing charger_id] | `charger_id` not found or not provided | Verify the charger is registered to the driver |
+| [PLACEHOLDER: validation error code for invalid timestamps] | `end_time` before `start_time` or timestamps in the future | Check timestamp logic in your system |
+| [PLACEHOLDER: validation error code for negative energy] | `energy_kwh` is negative or zero | Validate energy readings before submission |
+| [PLACEHOLDER: validation error code for duplicate session] | `external_session_id` already exists | Retrieve the existing session instead of resubmitting |
+
+## Bulk submission
+
+[PLACEHOLDER: confirm if bulk or batch session submission is supported. If supported, document the endpoint, payload format and batch size limits.]
+
+If bulk submission is not available, submit sessions individually and handle rate limits as described in [api-reference/rate-limits](/api-reference/rate-limits).
+
+## Next steps
+
+- [modules/session-ingestion](/modules/session-ingestion) for session processing and validation rules
+- [api-reference/idempotency](/api-reference/idempotency) for idempotency patterns across the API
+- [guides/home-charging-reimbursement](/guides/home-charging-reimbursement) for the full reimbursement flow

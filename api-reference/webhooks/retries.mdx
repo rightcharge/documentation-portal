@@ -1,0 +1,38 @@
+---
+title: "Webhook Delivery and Retry Behaviour"
+sidebarTitle: "Retries"
+description: "Understand how Rightcharge retries failed webhook deliveries, including retry schedule, timeout behaviour and how to acknowledge events."
+---
+
+If your endpoint returns a non-2xx response or times out, Rightcharge retries delivery automatically. This page explains the retry schedule, timeout behaviour, and how to acknowledge events correctly.
+
+## Retry schedule
+
+[PLACEHOLDER: retry schedule, for example 1 minute, 5 minutes, 30 minutes, 2 hours, 24 hours — engineering to confirm]
+
+## Timeout
+
+Each delivery attempt times out after [PLACEHOLDER: request timeout per attempt — engineering to confirm].
+
+## Acknowledging events
+
+Return any `2xx` HTTP response as quickly as possible to acknowledge receipt. Process the event asynchronously in your own queue or worker to avoid timeouts.
+
+<Tip>
+  Acknowledge immediately and enqueue for async processing to avoid timeouts. Heavy processing inside the webhook handler increases the risk of retries.
+</Tip>
+
+## After all retries are exhausted
+
+[PLACEHOLDER: confirm what happens when all retries fail — dead-letter queue, dashboard notification, manual replay, etc. — engineering to confirm]
+
+## Best practices
+
+- Respond with `2xx` before doing any heavy work.
+- Store the event ID and check for duplicates if your handler is not idempotent.
+- Monitor your endpoint response times and error rates in the partner dashboard.
+
+## What to read next
+
+- [Webhook overview](/api-reference/webhooks/overview) — how to register endpoints
+- [Webhook verification](/api-reference/webhooks/verification) — how to verify signatures on incoming events

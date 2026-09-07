@@ -1,0 +1,54 @@
+---
+title: "Idempotency in the Rightcharge API"
+sidebarTitle: "Idempotency"
+description: "Use idempotency keys on write requests to safely retry Rightcharge API calls without creating duplicate resources."
+---
+
+Rightcharge supports idempotency keys on mutating requests. Pass an `Idempotency-Key` header with a unique string to make retries safe. If a request with a given key has already been processed, Rightcharge returns the original response without re-executing the operation.
+
+## How it works
+
+1. Generate a unique key (UUID v4 recommended) for each request attempt.
+2. Include it in the `Idempotency-Key` header.
+3. If the request fails due to a network error, retry with the same key.
+4. Rightcharge returns the original response if the key is recognised, or processes the request normally if it is new.
+
+## Header format
+
+```text
+Idempotency-Key: <uuid>
+```
+
+## Example request
+
+```bash
+curl -X POST "https://[PLACEHOLDER: base URL]/v1/drivers" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000" \
+  -d '{
+    "company_id": "comp_123",
+    "first_name": "Alice",
+    "last_name": "Smith",
+    "email": "alice@example.com"
+  }'
+```
+
+## Best practices
+
+- Use a UUID v4 for each request attempt.
+- Store the idempotency key alongside the resource in your system so you can correlate retries.
+- Only retry on network errors or `5xx` responses. Do not retry on `4xx` errors with the same key.
+
+## Scope and expiry
+
+<Info>
+  [PLACEHOLDER: confirm which endpoints support idempotency keys — engineering to confirm]
+</Info>
+
+Idempotency keys expire after [PLACEHOLDER: TTL in hours — engineering to confirm] hours. After expiry, the same key may create a new resource if reused.
+
+## What to read next
+
+- [Rate limits](/api-reference/rate-limits) — how to handle throttling when retrying requests
+- [Errors reference](/api-reference/errors) — which errors are safe to retry

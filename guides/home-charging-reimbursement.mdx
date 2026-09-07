@@ -1,0 +1,287 @@
+---
+title: "Implement Home Charging Reimbursement"
+sidebarTitle: "Reimbursement Guide"
+description: "A step-by-step implementation guide covering company setup, driver onboarding, session processing, cost calculation, policy controls and reimbursement creation."
+---
+
+This guide walks you through the complete end-to-end flow for implementing home charging reimbursement with Rightcharge. You will create a company, onboard a driver, ingest charging sessions, calculate costs, apply policy controls and generate reimbursements. Follow these steps in the Rightcharge sandbox before moving to production.
+
+<Steps>
+  <Step title="Establish company and fleet context">
+    Create a Company to represent your fleet or organisation. Set `external_id` to your internal fleet identifier so you can correlate records between your platform and Rightcharge.
+
+    <CodeGroup>
+
+    ```bash
+    curl -X POST [PLACEHOLDER: https://api.rightcharge.co.uk/v1/companies] \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "Acme Fleet",
+        "external_id": "acme-fleet-001"
+      }'
+    ```
+
+    </CodeGroup>
+
+    Expected response:
+
+    ```json
+    {
+      "id": "comp_abc123",
+      "name": "Acme Fleet",
+      "external_id": "acme-fleet-001",
+      "status": "active",
+      "created_at": "2024-01-15T09:30:00Z"
+    }
+    ```
+
+    <Tip>
+      Store the returned `id` as your Rightcharge company identifier. You will use it when creating drivers and retrieving reimbursements.
+    </Tip>
+  </Step>
+  <Step title="Create and invite the driver">
+    Create a driver under the company. The response includes an `onboarding_url` that you deliver to the driver.
+
+    <CodeGroup>
+
+    ```bash
+    curl -X POST [PLACEHOLDER: https://api.rightcharge.co.uk/v1/drivers] \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "company_id": "comp_abc123",
+        "first_name": "Jane",
+        "last_name": "Smith",
+        "email": "jane.smith@example.com"
+      }'
+    ```
+
+    </CodeGroup>
+
+    Expected response:
+
+    ```json
+    {
+      "id": "drv_def456",
+      "company_id": "comp_abc123",
+      "first_name": "Jane",
+      "last_name": "Smith",
+      "email": "jane.smith@example.com",
+      "status": "pending_onboarding",
+      "onboarding_url": "[PLACEHOLDER: https://onboarding.rightcharge.co.uk/drv_def456]",
+      "created_at": "2024-01-15T09:35:00Z"
+    }
+    ```
+
+    Send the `onboarding_url` to the driver by email or present it in your platform. In sandbox, you can open the URL directly to simulate the driver journey.
+  </Step>
+  <Step title="Driver completes onboarding">
+    The driver opens `onboarding_url` and completes three steps: charger registration, vehicle registration and tariff confirmation. In the sandbox environment, all verification steps are skipped so you can test the full flow immediately.
+
+    On completion, Rightcharge fires a webhook event: **[PLACEHOLDER: driver onboarding completion webhook event name]**.
+
+    Your platform should listen for this event and update the driver status from `pending_onboarding` to `onboarded`.
+
+    <Note>
+      In production, Rightcharge may perform additional verification steps such as address confirmation or charger ownership validation.
+    </Note>
+  </Step>
+  <Step title="Connect charger, vehicle and tariff sources">
+    Once onboarding is complete, Rightcharge begins receiving data from the sources the driver registered:
+
+    - **Charger data** arrives automatically via the Rightcharge charger integration if you have configured a managed integration or CPMS connection. See [modules/charger-integration](/modules/charger-integration) for configuration options.
+    - **Vehicle data** improves session attribution and home charging verification. See [modules/vehicle-integration](/modules/vehicle-integration).
+    - **Tariff data** is confirmed during onboarding. The tariff engine uses real tariff data to calculate electricity costs. See [modules/tariff-engine](/modules/tariff-engine).
+
+    If you do not have an automatic charger integration configured, you can submit sessions manually via the API. Step 5 covers both paths.
+  </Step>
+  <Step title="Receive or submit charging sessions">
+    Rightcharge ingests session data through two routes:
+
+    <Tabs>
+      <Tab title="Automatic (integration)">
+        If you have configured a Rightcharge-managed charger integration or CPMS push, session data arrives automatically when the driver charges at home. Rightcharge fires **[PLACEHOLDER: session received webhook event name]** when a new session is ingested.
+      </Tab>
+      <Tab title="Manual (API submission)">
+        Submit sessions directly via the API:
+
+        <CodeGroup>
+
+        ```bash
+        curl -X POST [PLACEHOLDER: https://api.rightcharge.co.uk/v1/sessions] \
+          -H "Authorization: Bearer YOUR_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "driver_id": "drv_def456",
+            "charger_id": "chr_ghi789",
+            "start_time": "2024-01-15T18:00:00Z",
+            "end_time": "2024-01-15T22:30:00Z",
+            "energy_kwh": 24.5,
+            "external_session_id": "session-2024-01-15-001"
+          }'
+        ```
+
+        </CodeGroup>
+
+        Expected response:
+
+        ```json
+        {
+          "id": "sess_jkl012",
+          "driver_id": "drv_def456",
+          "charger_id": "chr_ghi789",
+          "status": "received",
+          "external_session_id": "session-2024-01-15-001",
+          "created_at": "2024-01-15T22:31:00Z"
+        }
+        ```
+      </Tab>
+    </Tabs>
+
+    <Warning>
+      Always pass a stable `external_session_id`. Rightcharge uses this field for duplicate detection. Re-submitting the same `external_session_id` returns the original session without creating a duplicate.
+    </Warning>
+  </Step>
+  <Step title="Calculate tariff-based cost">
+    Rightcharge automatically calculates the cost of each session on validation using the tariff confirmed during driver onboarding. The result includes a full tariff breakdown.
+
+    Retrieve the calculated cost via GET session:
+
+    <CodeGroup>
+
+    ```bash
+    curl [PLACEHOLDER: https://api.rightcharge.co.uk/v1/sessions/{session_id}] \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+
+    </CodeGroup>
+
+    Expected response (cost fields):
+
+    ```json
+    {
+      "id": "sess_jkl012",
+      "cost_gbp": 4.32,
+      "tariff_breakdown": {
+        "tariff_id": "tar_mno345",
+        "unit_rate_pence": 17.6,
+        "standing_charge_pence": 42.0,
+        "total_cost_gbp": 4.32
+      },
+      "status": "cost_calculated"
+    }
+    ```
+
+    <Tip>
+      Review `tariff_breakdown` to verify that the correct tariff and time-of-use rates were applied.
+    </Tip>
+  </Step>
+  <Step title="Apply eligibility, policy and fraud controls">
+    Eligibility and policy checks run automatically against every session. Rules may include home charging verification, monthly caps, duplicate detection and fraud signals.
+
+    If a session fails a rule, Rightcharge fires **[PLACEHOLDER: session rejected webhook event name]** with a `reason` field explaining the rejection. Your platform should handle this event and surface the reason to the driver or fleet manager.
+
+    Common rejection reasons [PLACEHOLDER: confirm exact error codes and descriptions]:
+
+    - `not_home_charging` — session did not occur at the registered home address
+    - `cap_exceeded` — driver has reached the monthly reimbursement cap
+    - `duplicate_session` — session matches a previously submitted record
+    - `fraud_flag` — session triggered a fraud control rule
+
+    <Note>
+      Configure your policy rules with the Rightcharge partner team before going live. See [modules/eligibility-policy](/modules/eligibility-policy) for available controls.
+    </Note>
+  </Step>
+  <Step title="Create a reimbursement">
+    For sessions that pass all eligibility and policy checks, Rightcharge automatically creates a reimbursement record. [PLACEHOLDER: confirm if reimbursement creation is fully automatic or requires a manual trigger via API.]
+
+    The reimbursement includes the total amount, linked sessions and current status.
+
+    <CodeGroup>
+
+    ```bash
+    curl [PLACEHOLDER: https://api.rightcharge.co.uk/v1/reimbursements/{reimbursement_id}] \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+
+    </CodeGroup>
+
+    Expected response:
+
+    ```json
+    {
+      "id": "reimb_pqr678",
+      "company_id": "comp_abc123",
+      "driver_id": "drv_def456",
+      "amount_gbp": 4.32,
+      "sessions": ["sess_jkl012"],
+      "status": "pending",
+      "created_at": "2024-01-16T00:00:00Z"
+    }
+    ```
+
+    Rightcharge fires **[PLACEHOLDER: reimbursement created webhook event name]** when a reimbursement is created.
+  </Step>
+  <Step title="Receive lifecycle webhooks">
+    The following webhooks fire during the reimbursement flow. Subscribe to all relevant events in your partner dashboard or via the API.
+
+    | Event | When fired | Action for partner |
+    | --- | --- | --- |
+    | [PLACEHOLDER: driver onboarding completion webhook event name] | Driver completes onboarding | Update driver status to `onboarded` |
+    | [PLACEHOLDER: session received webhook event name] | New session ingested | Log session for tracking |
+    | [PLACEHOLDER: session rejected webhook event name] | Session fails policy check | Surface rejection reason to fleet manager or driver |
+    | [PLACEHOLDER: reimbursement created webhook event name] | Reimbursement record created | Update payroll or driver balance |
+    | [PLACEHOLDER: reimbursement status changed webhook event name] | Reimbursement status transitions | Track payment lifecycle |
+
+    See [api-reference/webhooks/events](/api-reference/webhooks/events) for the full event catalogue and payload schemas.
+  </Step>
+  <Step title="Report and reconcile">
+    Retrieve reimbursements for a date range to export for payroll or reconciliation.
+
+    <CodeGroup>
+
+    ```bash
+    curl "[PLACEHOLDER: https://api.rightcharge.co.uk/v1/reimbursements?company_id=comp_abc123&from=2024-01-01&to=2024-01-31]" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+
+    </CodeGroup>
+
+    Expected response:
+
+    ```json
+    {
+      "data": [
+        {
+          "id": "reimb_pqr678",
+          "driver_id": "drv_def456",
+          "amount_gbp": 4.32,
+          "status": "paid",
+          "created_at": "2024-01-16T00:00:00Z"
+        }
+      ],
+      "pagination": {
+        "next_cursor": null
+      }
+    }
+    ```
+
+    See [api-reference/reimbursements](/api-reference/reimbursements) for query parameters and response formats. For broader fleet analytics, see [solutions/fleet-reporting](/solutions/fleet-reporting).
+  </Step>
+</Steps>
+
+## Sandbox checklist
+
+<Accordion title="What to verify before going live">
+  - [ ] Company created successfully with `external_id` matching your internal fleet ID
+  - [ ] Driver created and `onboarding_url` generated
+  - [ ] Driver completes onboarding journey in sandbox (verification steps skipped)
+  - [ ] Webhook listener receives [PLACEHOLDER: driver onboarding completion webhook event name] and updates driver status
+  - [ ] At least one session ingested successfully (automatic or manual)
+  - [ ] Session cost calculated and `tariff_breakdown` reviewed for accuracy
+  - [ ] Eligibility and policy checks pass for test sessions
+  - [ ] Reimbursement created with correct `amount_gbp` and linked sessions
+  - [ ] All lifecycle webhooks received and handled in your platform
+  - [ ] Reimbursement report retrieved for a test date range
+</Accordion>
