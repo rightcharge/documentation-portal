@@ -128,6 +128,19 @@ Every journey page should have a plain-language summary, actor view, process dia
 
 Each blueprint should state prerequisites, target architecture, division of responsibility, required modules, implementation sequence, testing, commercial/operational dependencies, and go-live criteria.
 
+##### Required diagrams for every partner blueprint
+
+Every partner-type blueprint must include the following approved Rightcharge diagrams:
+
+1. **Partnership and responsibility map** — the partner, Rightcharge, fleet customer, driver, and relevant third parties; who contracts with whom; and which organisation owns each part of the service.
+2. **Customer journey and operating model** — the end-to-end experience from proposition or fleet opt-in through onboarding, service delivery, reporting, support, and offboarding, normally presented as a swimlane.
+3. **Technical integration and data flow** — systems, APIs, hosted or embedded interfaces, webhooks, data sources, direction of data movement, and system-of-record boundaries.
+4. **Invoice and money flow** — required whenever the model includes licence fees, charging costs, fleet invoices, energy reimbursements, supplier payouts, revenue share, or split invoicing.
+
+Where relevant, a blueprint must also include a resource lifecycle diagram for onboarding, charge sessions, RFID cards, reimbursements, disputes, or other stateful processes.
+
+A partner blueprint cannot be marked complete without its required diagrams. Each diagram must use the Rightcharge diagram design system, remain readable independently of the body text, include a plain-language explanation, and clearly distinguish contractual, data, service, invoice, and money flows.
+
 #### 6. Implementation guides
 
 - Obtain sandbox access
@@ -339,10 +352,11 @@ API pages should use descriptive labels such as “Get a charge session” rathe
 
 - Standardise every blueprint
 - Add fully managed, embedded, modular, data-only, and white-label patterns
-- Add responsibility matrices and sequence diagrams
+- Produce the mandatory partnership, customer journey, technical/data-flow, and conditional invoice/money-flow diagrams for every partner type
+- Add responsibility matrices and relevant lifecycle or sequence diagrams
 - Connect each blueprint to prerequisites and a go-live checklist
 
-**Exit criteria:** a partner can select a model and estimate its implementation scope and dependencies.
+**Exit criteria:** a partner can select a model, understand the full operating and integration design visually, and estimate its implementation scope and dependencies. No blueprint is complete until its mandatory diagrams are approved.
 
 ### Phase 6 — Implementation guides
 
@@ -411,6 +425,7 @@ A section is done only when:
 - Live/pilot/planned status is explicit
 - The plain-language explanation and technical detail agree
 - Relevant diagrams are approved and accessible
+- Every partner blueprint includes its mandatory partnership, journey, technical/data-flow, and applicable invoice/money-flow diagrams
 - API and webhook links resolve
 - Examples have been tested in sandbox
 - Edge cases and operational ownership are documented
