@@ -1,0 +1,434 @@
+---
+title: "Rightcharge Documentation Programme"
+sidebarTitle: "Documentation Programme"
+description: "Internal roadmap for building the Rightcharge documentation portal into a complete platform and API knowledge base."
+hidden: true
+noindex: true
+---
+
+# Rightcharge documentation programme
+
+This page is the internal build plan for turning the Rightcharge documentation portal into the single source of truth for commercial, operational, product, implementation, and developer audiences.
+
+## Outcome
+
+A reader should be able to answer four questions without leaving the portal:
+
+1. **What does Rightcharge do?**
+2. **How does the complete platform work?**
+3. **How do we integrate and launch it?**
+4. **How do we operate, support, and govern it safely?**
+
+The portal must support fleet and partner decision-makers, solution architects, engineers, implementation managers, finance and operations teams, security reviewers, and support teams.
+
+## Current-state assessment
+
+The existing portal has a useful foundation:
+
+- Clear Documentation and API Reference tabs
+- Start-here, platform, solution, module, blueprint, guide, and API sections
+- A modular story for home charging reimbursement
+- Initial pages for authentication, webhooks, lifecycle states, supported integrations, and go-live
+- OpenAPI-driven endpoint groups for several resources
+
+The main gaps are:
+
+- The narrative is centred on home reimbursement rather than the full Electric Fuel Card platform
+- Public charging, RFID/card management, workplace charging, partner operations, invoicing, and money movement are not covered
+- Fleet manager, driver, partner, finance, and support experiences are not explained as complete journeys
+- Architecture pages are high-level and need canonical diagrams
+- Fraud prevention and policy logic need an end-to-end explanation
+- Regional, currency, tax/VAT, and data-residency behaviour needs a controlled framework
+- Security, privacy, data processing, retention, incident handling, and service operations are missing
+- Several pages still contain production placeholders or provisional contracts
+- Endpoint coverage and resource naming are incomplete and auto-generated endpoint labels are not readable enough
+- The documentation has no visible freshness, ownership, or review model
+
+## Audience routes
+
+| Audience | First destination | What they must get |
+| --- | --- | --- |
+| Commercial or executive | Platform overview | Value, scope, operating models, responsibilities, outcomes |
+| Fleet or partner product lead | Solutions and journeys | User experience, options, data, money flow, rollout choices |
+| Solution architect | Architecture and integration paths | Boundaries, systems, data flows, security, dependencies |
+| Developer | Quickstart, guides, API reference | Working sandbox integration with complete contracts and examples |
+| Implementation manager | Delivery and go-live | Configuration, testing, migration, launch, ownership |
+| Finance or operations | Billing, reconciliation, money movement | Invoices, currencies, settlement, exceptions, reports |
+| Security or legal reviewer | Trust and compliance | Data roles, residency, retention, controls, subprocessors, evidence |
+| Support team | Operations and troubleshooting | Statuses, common failures, escalation, incident and reconciliation flows |
+
+## Target information architecture
+
+### Documentation
+
+#### 1. Start here
+
+- Rightcharge in five minutes
+- Choose your role
+- Choose your product
+- Choose your integration model
+- Platform terminology
+- Developer quickstart
+
+#### 2. Platform and products
+
+- Platform overview
+- Electric Fuel Card overview
+- Home charging and reimbursement
+- Public charging and RFID cards
+- Workplace charging
+- Tariffs and session costing
+- Payments, invoicing, and reimbursement
+- Policy and fraud prevention
+- Reporting, carbon, and insights
+- Partner platform and administration
+- Supported countries, currencies, and integrations
+- Current capabilities versus planned capabilities
+
+#### 3. End-to-end journeys
+
+- Fleet onboarding
+- Driver invitation and onboarding
+- Charger, tariff, and vehicle connection
+- Home session to approved reimbursement
+- Public charging session and RFID lifecycle
+- Monthly invoicing, settlement, and reconciliation
+- Exceptions, disputes, refunds, and corrections
+- Offboarding, deactivation, and retention
+
+Every journey page should have a plain-language summary, actor view, process diagram, system sequence, statuses, data exchanged, responsibilities, exceptions, and links to implementation/API details.
+
+#### 4. Architecture and concepts
+
+- Platform ecosystem
+- Deployment and environment model
+- Data model and identifiers
+- Resource ownership and tenancy
+- Lifecycle and status model
+- Event and webhook model
+- Data sources and integration boundaries
+- UK and EU data residency
+- Reliability, idempotency, retries, and reconciliation
+- Embedded, hosted, API-only, and white-label patterns
+
+#### 5. Integration paths and partner blueprints
+
+- Fully managed hosted journey
+- Embedded/white-label application
+- Modular API integration
+- Data-only integrations
+- CPMS
+- Charger manufacturer
+- Fleet platform
+- Leasing company
+- Energy supplier
+- Vehicle OEM/telematics provider
+- Mobility service provider/eMSP
+- Reseller and strategic partner
+
+Each blueprint should state prerequisites, target architecture, division of responsibility, required modules, implementation sequence, testing, commercial/operational dependencies, and go-live criteria.
+
+##### Required diagrams for every partner blueprint
+
+Every partner-type blueprint must include the following approved Rightcharge diagrams:
+
+1. **Partnership and responsibility map** — the partner, Rightcharge, fleet customer, driver, and relevant third parties; who contracts with whom; and which organisation owns each part of the service.
+2. **Customer journey and operating model** — the end-to-end experience from proposition or fleet opt-in through onboarding, service delivery, reporting, support, and offboarding, normally presented as a swimlane.
+3. **Technical integration and data flow** — systems, APIs, hosted or embedded interfaces, webhooks, data sources, direction of data movement, and system-of-record boundaries.
+4. **Invoice and money flow** — required whenever the model includes licence fees, charging costs, fleet invoices, energy reimbursements, supplier payouts, revenue share, or split invoicing.
+
+Where relevant, a blueprint must also include a resource lifecycle diagram for onboarding, charge sessions, RFID cards, reimbursements, disputes, or other stateful processes.
+
+A partner blueprint cannot be marked complete without its required diagrams. Each diagram must use the Rightcharge diagram design system, remain readable independently of the body text, include a plain-language explanation, and clearly distinguish contractual, data, service, invoice, and money flows.
+
+#### 6. Implementation guides
+
+- Obtain sandbox access
+- Authenticate and rotate credentials
+- Create and manage fleet companies
+- Invite and manage drivers
+- Launch hosted onboarding
+- Embed the Rightcharge application
+- Connect charger/CPMS data
+- Connect vehicle data
+- Connect tariff and supplier data
+- Submit and reconcile sessions
+- Configure policies and fraud controls
+- Configure webhooks
+- Manage RFID cards
+- Retrieve reporting and transactions
+- Test failure and retry scenarios
+- Production readiness and go-live
+- Migration and rollout playbooks
+
+#### 7. Operations, finance, and trust
+
+- Roles and responsibilities
+- Billing and invoicing models
+- Standard and split-invoice money flows
+- Currency and bank-account routing
+- Settlement and supplier payouts
+- Reconciliation and finance reporting
+- Support model and severity levels
+- Operational status and incident communications
+- Security overview
+- Privacy, GDPR roles, and data processing
+- Data residency and retention
+- Business continuity and disaster recovery
+- Compliance evidence and security-review pack
+- Accessibility and service requirements
+
+#### 8. Resources
+
+- Supported integrations
+- Country capability matrix
+- Status glossary
+- Field and terminology glossary
+- FAQs
+- Release notes
+- Deprecation notices
+- Contact and escalation paths
+
+### API Reference
+
+#### Foundations
+
+- Overview and base URLs
+- Authentication and key management
+- Request and response conventions
+- Pagination and filtering
+- Idempotency
+- Rate limits
+- Errors
+- Versioning and deprecation
+- Environments and test data
+
+#### Resource groups
+
+- Companies
+- Users/drivers
+- Invitations and onboarding
+- Chargers and integrations
+- Vehicles and integrations
+- Tariffs and energy suppliers
+- Charge sessions
+- Eligibility and policy decisions
+- Reimbursements
+- Payments and invoices
+- RFID cards
+- Public charging locations and sessions
+- Reports and transactions
+- Webhooks
+
+#### Developer resources
+
+- Event catalogue and payload schemas
+- Signature verification and replay protection
+- Retry behaviour and ordering
+- End-to-end examples
+- Postman collection
+- Copyable examples in curl, Python, JavaScript/TypeScript
+- OpenAPI download
+- Changelog and migration guides
+
+## Diagram register
+
+| ID | Diagram | Primary audience | Format |
+| --- | --- | --- | --- |
+| D01 | Rightcharge ecosystem and actors | All | Branded system map |
+| D02 | Electric Fuel Card product map: home, public, workplace | All | Product capability map |
+| D03 | Fully integrated end-to-end journey | Product and commercial | Actor flow |
+| D04 | Pilot/split-invoice operating model | Finance and operations | Money and responsibility flow |
+| D05 | Hosted, embedded, modular, and API-only comparison | Product and architecture | Comparison diagram |
+| D06 | Driver onboarding journey | Product and implementation | Swimlane |
+| D07 | Home session-to-reimbursement lifecycle | All | Lifecycle flow |
+| D08 | Public charging and RFID lifecycle | Product and operations | Lifecycle flow |
+| D09 | Monthly invoice, settlement, and supplier payout | Finance | Money flow |
+| D10 | Fraud prevention and policy decision flow | Product, risk, technical | Decision flow |
+| D11 | Core data model | Technical | ERD |
+| D12 | Platform architecture and integration boundaries | Technical | Architecture diagram |
+| D13 | Webhook delivery, verification, retry, and reconciliation | Developers | Sequence diagram |
+| D14 | UK/EU deployment and data residency | Security and architecture | Deployment map |
+| D15 | Support, incident, and escalation process | Operations | Swimlane |
+
+All diagrams must use the Rightcharge diagram design system, have an accessible text explanation, show arrow direction clearly, avoid unexplained acronyms, and distinguish data flow, money flow, and contractual responsibility.
+
+## Standard page pattern
+
+Every substantive page should contain:
+
+1. One-sentence purpose
+2. Audience and prerequisites
+3. Plain-language explanation
+4. Canonical diagram where useful
+5. Actors and responsibilities
+6. Happy path
+7. Statuses and lifecycle
+8. Exceptions and edge cases
+9. Data and security considerations
+10. Implementation steps
+11. API and webhook links
+12. Testing guidance
+13. Related pages
+14. Owner and last-reviewed date
+
+Use callouts consistently:
+
+- **Note** for context
+- **Tip** for recommended practice
+- **Warning** for security, financial, irreversible, or production risk
+- **Info** for regional or product availability
+
+## API documentation quality bar
+
+The OpenAPI specification is the contract and must be generated from or validated against production code.
+
+Before an endpoint group is considered complete, it must have:
+
+- Human-readable operation summary and description
+- Stable operation ID and resource-based tag
+- Authentication requirements
+- Complete parameters and validation constraints
+- Request and response schemas with realistic examples
+- Standard error responses
+- Pagination/filter/sort behaviour
+- Idempotency behaviour for writes
+- Permissions and tenancy rules
+- Sandbox behaviour
+- Webhook side effects
+- Lifecycle/status impact
+- Version introduced and deprecation status
+
+API pages should use descriptive labels such as “Get a charge session” rather than path fragments such as “{session_id}”.
+
+## Delivery plan
+
+### Phase 0 — Confirm scope and source of truth
+
+- Confirm which capabilities are live, pilot, planned, or partner-specific
+- Confirm public versus authenticated/internal content
+- Name a product owner and technical owner for every section
+- Agree canonical terms: driver/user, fleet/company, reimbursement/payment, partner/reseller
+- Collect the current OpenAPI file, environment URLs, event catalogue, status enums, security pack, supported integration matrix, and money-flow rules
+
+**Exit criteria:** approved capability inventory, terminology, access classification, and source register.
+
+### Phase 1 — Navigation and entry experience
+
+- Rewrite the home page around audience and product routes
+- Add “Choose your role,” “Choose your product,” and “Choose your integration model”
+- Reorganise navigation to match the target architecture
+- Add visible capability-status labels
+- Remove or replace every placeholder on start and API foundation pages
+
+**Exit criteria:** each audience reaches its primary route within two clicks and no production placeholder remains in the entry experience.
+
+### Phase 2 — Platform and product narrative
+
+- Document the full Electric Fuel Card platform
+- Create D01 and D02
+- Explain home, public, workplace, payments, reporting, policy, and administration
+- Publish product boundaries and responsibility model
+
+**Exit criteria:** a non-technical reader can accurately explain the platform, products, actors, and value.
+
+### Phase 3 — End-to-end journeys
+
+- Build each journey page using the standard pattern
+- Create D03, D06, D07, D08, D09, and D10
+- Link every journey step to its module, guide, API resource, and event
+
+**Exit criteria:** all major user and money flows are traceable from entry to reconciliation, including exceptions.
+
+### Phase 4 — Architecture and core concepts
+
+- Expand architecture, data model, tenancy, lifecycle, events, and regional deployment pages
+- Create D11, D12, D13, and D14
+- Define canonical IDs, ownership, statuses, and source-of-truth boundaries
+
+**Exit criteria:** a solution architect can design an integration without relying on undocumented assumptions.
+
+### Phase 5 — Integration paths and blueprints
+
+- Standardise every blueprint
+- Add fully managed, embedded, modular, data-only, and white-label patterns
+- Produce the mandatory partnership, customer journey, technical/data-flow, and conditional invoice/money-flow diagrams for every partner type
+- Add responsibility matrices and relevant lifecycle or sequence diagrams
+- Connect each blueprint to prerequisites and a go-live checklist
+
+**Exit criteria:** a partner can select a model, understand the full operating and integration design visually, and estimate its implementation scope and dependencies. No blueprint is complete until its mandatory diagrams are approved.
+
+### Phase 6 — Implementation guides
+
+- Turn high-level module content into executable tasks
+- Add complete requests, responses, test data, expected events, and failure cases
+- Add an embedded-app guide and RFID/public charging guides
+- Create migration, rollout, and production-readiness playbooks
+
+**Exit criteria:** a developer can complete a sandbox integration using the portal alone.
+
+### Phase 7 — API contract completion
+
+- Audit endpoints against backend routes and current API version
+- Complete missing resource groups
+- Replace provisional webhook events and status values
+- Improve OpenAPI operation names, schemas, examples, and errors
+- Publish Postman and language examples
+- Add contract validation to CI
+
+**Exit criteria:** the published reference matches production and all sample flows pass automated smoke tests.
+
+### Phase 8 — Operations, finance, security, and compliance
+
+- Create D04 and D15
+- Publish invoicing, settlement, reconciliation, refunds, support, and incident pages
+- Add controlled trust content for privacy, residency, retention, security, and continuity
+- Separate universal facts from country-specific guidance and questions requiring professional advice
+
+**Exit criteria:** finance, operations, security, and legal reviewers have a complete due-diligence route.
+
+### Phase 9 — Quality, governance, and launch
+
+- Run technical, product, finance, security, support, and plain-language reviews
+- Check links, code examples, OpenAPI validity, diagrams, accessibility, and search terms
+- Add owners and review dates
+- Define release-note and deprecation workflows
+- Review analytics and failed searches monthly
+
+**Exit criteria:** signed-off launch checklist, no critical stale content, and an ongoing maintenance cadence.
+
+## Recommended execution order
+
+Work section by section in this order:
+
+1. Scope, capability inventory, and terminology
+2. Home page and navigation
+3. Platform overview and product map
+4. Home reimbursement journey
+5. Public charging and RFID journey
+6. Payments, invoicing, and money movement
+7. Fraud prevention and policy
+8. Architecture, data model, and lifecycle
+9. Integration models and partner blueprints
+10. Implementation guides
+11. API and webhook contract
+12. Operations, trust, and regional content
+13. Go-live, support, governance, and analytics
+
+This order produces a coherent narrative early while allowing the exact technical contract to be validated before it is presented as final.
+
+## Definition of done for each section
+
+A section is done only when:
+
+- Content has a named business and technical owner
+- Live/pilot/planned status is explicit
+- The plain-language explanation and technical detail agree
+- Relevant diagrams are approved and accessible
+- Every partner blueprint includes its mandatory partnership, journey, technical/data-flow, and applicable invoice/money-flow diagrams
+- API and webhook links resolve
+- Examples have been tested in sandbox
+- Edge cases and operational ownership are documented
+- Security, privacy, financial, and regional implications are reviewed where relevant
+- Search terms and related links are added
+- A review date is recorded
